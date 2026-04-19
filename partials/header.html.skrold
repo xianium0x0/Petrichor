@@ -1,0 +1,36 @@
+<!-- ========================================
+     Petrich∅r - Common Header
+     parials/header.html
+     ======================================== -->
+<header class="site-header" id="site-header">
+  <div class="header-inner">
+    <div class="header-logo">
+      <a href="index.html" class="logo-link">
+        <span class="logo-text">Petrich<span class="logo-symbol">∅</span>r</span>
+        <span class="logo-tagline">underground idol</span>
+      </a>
+    </div>
+
+    <button class="nav-toggle" id="nav-toggle" aria-label="メニューを開く" aria-expanded="false">
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+    </button>
+
+    <nav class="site-nav" id="site-nav" aria-label="メインナビゲーション">
+      <ul class="nav-list">
+        <li class="nav-item"><a href="index.html" class="nav-link" data-page="home">HOME</a></li>
+        <li class="nav-item"><a href="member.html" class="nav-link" data-page="member">MEMBER</a></li>
+        <li class="nav-item"><a href="history.html" class="nav-link" data-page="history">HISTORY</a></li>
+        <li class="nav-item"><a href="contact.html" class="nav-link" data-page="contact">CONTACT</a></li>
+      </ul>
+    </nav>
+
+    <div class="nav-overlay" id="nav-overlay"></div>
+  </div>
+
+  <!-- Decorative header line -->
+  <div class="header-line">
+    <div class="header-line-inner"></div>
+  </div>
+</header>

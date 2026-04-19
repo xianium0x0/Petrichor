@@ -1,0 +1,179 @@
+/* ============================================================
+   Petrich∅r — History Page Styles
+   css/history.css
+   ============================================================ */
+
+/* ── Timeline Container ───────────────────────────────────── */
+.history-section { background: var(--clr-bg); }
+
+.timeline {
+  position: relative;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 0;
+}
+
+/* Center vertical line */
+.timeline::before {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 50%;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--clr-purple) 10%,
+    var(--clr-cyan) 50%,
+    var(--clr-purple) 90%,
+    transparent
+  );
+  transform: translateX(-50%);
+}
+
+/* ── Year Marker ──────────────────────────────────────────── */
+.timeline-year {
+  display: flex;
+  justify-content: center;
+  margin: 2.5rem 0 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+.timeline-year-text {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  padding: 0.4em 1.5em;
+  border: 1px solid var(--clr-border);
+  background: var(--clr-bg-2);
+  color: var(--clr-cyan);
+  text-transform: uppercase;
+  position: relative;
+}
+.timeline-year-text::before,
+.timeline-year-text::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 0; right: 0;
+}
+
+/* ── Timeline Item ────────────────────────────────────────── */
+.timeline-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 2.5rem;
+  position: relative;
+}
+
+/* Right items (left of center) */
+.timeline-item--right {
+  flex-direction: row;
+  padding-right: calc(50% + 2.5rem);
+}
+/* Left items (right of center) */
+.timeline-item--left {
+  flex-direction: row-reverse;
+  padding-left: calc(50% + 2.5rem);
+}
+
+/* ── Dot ──────────────────────────────────────────────────── */
+.timeline-dot {
+  position: absolute;
+  left: 50%;
+  top: 1.5rem;
+  transform: translate(-50%, -50%);
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--clr-purple);
+  border: 2px solid var(--clr-bg);
+  box-shadow: 0 0 12px rgba(155,93,229,0.6);
+  z-index: 2;
+  transition: box-shadow 0.3s, background 0.3s;
+}
+.timeline-item:hover .timeline-dot {
+  background: var(--clr-cyan);
+  box-shadow: 0 0 20px rgba(103,232,249,0.7);
+}
+.timeline-dot--origin {
+  width: 18px; height: 18px;
+  background: var(--grad-text);
+  box-shadow: 0 0 24px rgba(155,93,229,0.8), 0 0 48px rgba(103,232,249,0.4);
+  animation: dot-pulse 2.5s ease-in-out infinite;
+}
+@keyframes dot-pulse {
+  0%, 100% { box-shadow: 0 0 24px rgba(155,93,229,0.8); }
+  50% { box-shadow: 0 0 36px rgba(155,93,229,0.6), 0 0 60px rgba(103,232,249,0.5); }
+}
+
+/* ── Content Card ─────────────────────────────────────────── */
+.timeline-content {
+  width: 100%;
+  position: relative;
+}
+.card--origin {
+  border-color: var(--clr-purple);
+  box-shadow: var(--shadow-purple);
+}
+.card--origin::before {
+  background: linear-gradient(135deg, rgba(155,93,229,0.12), transparent 60%);
+}
+
+.timeline-date {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  color: var(--clr-cyan);
+  margin-bottom: 0.5rem;
+}
+.timeline-title {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 1.5vw, 1.15rem);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--clr-white);
+  margin-bottom: 0.6rem;
+  line-height: 1.4;
+}
+.timeline-desc {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--clr-muted);
+  line-height: 1.8;
+  margin-bottom: 1rem;
+}
+
+/* Tags */
+.timeline-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  padding: 0.25em 0.8em;
+  border: 1px solid var(--clr-border);
+  color: var(--clr-muted);
+}
+.timeline-tag--origin {
+  border-color: var(--clr-purple);
+  color: var(--clr-purple-lt);
+}
+
+/* ── Responsive (Mobile: single column) ──────────────────── */
+@media (max-width: 700px) {
+  .timeline::before {
+    left: 20px;
+  }
+  .timeline-item--right,
+  .timeline-item--left {
+    flex-direction: row;
+    padding-right: 0;
+    padding-left: 3.5rem;
+  }
+  .timeline-dot {
+    left: 20px;
+  }
+  .timeline-year {
+    justify-content: flex-start;
+    padding-left: 3.5rem;
+  }
+}
