@@ -6,6 +6,7 @@
  *
  * NOTE: ヘッダー・フッターは fetch ではなく JS で DOM 生成しています。
  *       これにより file:// プロトコル（ローカル直接起動）でも動作します。
+ *       partials/ フォルダの header.html / footer.html は SSI 用参照ファイルです。
  */
 
 const Loader = (() => {

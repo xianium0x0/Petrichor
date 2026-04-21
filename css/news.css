@@ -56,3 +56,34 @@
   .news-tag  { grid-column: 2; grid-row: 1; }
   .news-title { grid-column: 1 / -1; grid-row: 2; }
 }
+
+/* ── JSON描画で追加される要素 ──────────────────────────────── */
+/* 本文テキスト（news.jsの text フィールド、\n → <br> 変換済み） */
+.news-body {
+  grid-column: 1 / -1;
+  font-size: 0.85rem;
+  color: var(--clr-muted);
+  line-height: 1.8;
+  margin-top: 0.25rem;
+  font-style: italic;
+}
+
+/* タイトルにリンクがある場合 */
+.news-title-link {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+.news-title-link:hover { color: var(--clr-cyan); }
+
+/* データなし・エラー時のメッセージ */
+.news-empty {
+  grid-column: 1 / -1;
+  padding: 2rem 0;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  color: var(--clr-muted);
+  opacity: 0.6;
+  list-style: none;
+}

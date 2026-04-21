@@ -135,23 +135,8 @@
       <h2 class="section-title" data-reveal>News</h2>
       <div class="section-divider" data-reveal></div>
 
-      <ul class="news-list" data-reveal data-stagger="0.08">
-        <li class="news-item" data-reveal-child>
-          <time class="news-date" datetime="2024-12-01">2024.12.01</time>
-          <span class="news-tag">RELEASE</span>
-          <p class="news-title">1stシングル「夜雨のペトリコール」リリース決定</p>
-        </li>
-        <li class="news-item" data-reveal-child>
-          <time class="news-date" datetime="2024-11-15">2024.11.15</time>
-          <span class="news-tag">EVENT</span>
-          <p class="news-title">渋谷CLUB QUATTROにてワンマンライブ開催</p>
-        </li>
-        <li class="news-item" data-reveal-child>
-          <time class="news-date" datetime="2024-10-28">2024.10.28</time>
-          <span class="news-tag">MEDIA</span>
-          <p class="news-title">「アイドル最前線 vol.32」に掲載されました</p>
-        </li>
-      </ul>
+      <!-- ★ data/news.json を編集するとここに反映されます -->
+      <ul class="news-list" id="news-list-top" data-reveal data-stagger="0.08"></ul>
 
       <div class="news-more" data-reveal>
         <a href="news.html" class="btn">MORE NEWS</a>
@@ -162,6 +147,9 @@
 
   <!-- Footer Placeholder -->
   <div id="footer-placeholder"></div>
+
+  <!-- AI Credit -->
+  <p class="ai-credit">このHPは生成AIのサポートによって作成しています。</p>
 
   <!-- Back to Top -->
   <button id="back-to-top" aria-label="ページ上部へ戻る">↑</button>

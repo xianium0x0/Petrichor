@@ -125,15 +125,19 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 }
 
 /* ── Custom Cursor ────────────────────────────────────────── */
-/* ブラウザのデフォルトカーソルを非表示にしてカスタムに置換 */
-* { cursor: none !important; }
+/* タッチデバイス(スマホ)ではデフォルトカーソルを維持 */
+@media (hover: hover) and (pointer: fine) {
+  * { cursor: none !important; }
+}
 
 /* 外側リング：大きめ・遅延追随 */
 .cursor-ring {
-  position: fixed; top: 0; left: 0; z-index: 9999;
+  position: fixed; top: 0; left: 0;
+  /* preloader(10000)より上、他すべての要素より前面に */
+  z-index: 100000;
   width: 36px; height: 36px;
   border-radius: 50%;
-  border: 1.5px solid rgba(192, 132, 252, 0.7);
+  border: 1.5px solid rgba(192, 132, 252, 0.85);
   pointer-events: none;
   margin-left: -18px; margin-top: -18px;
   transition: width 0.35s var(--ease-out-expo),
@@ -141,18 +145,18 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
               margin 0.35s var(--ease-out-expo),
               border-color 0.3s,
               opacity 0.3s;
-  mix-blend-mode: normal;
 }
 .cursor-ring--hover {
   width: 56px; height: 56px;
   margin-left: -28px; margin-top: -28px;
-  border-color: rgba(103, 232, 249, 0.9);
+  border-color: rgba(103, 232, 249, 0.95);
 }
 .cursor-ring--hidden { opacity: 0; }
 
 /* 内側ドット：即座に追随 */
 .cursor-dot {
-  position: fixed; top: 0; left: 0; z-index: 10000;
+  position: fixed; top: 0; left: 0;
+  z-index: 100001;
   width: 8px; height: 8px;
   border-radius: 50%;
   background: #c084fc;
@@ -171,12 +175,16 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 .site-header {
   position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
   height: var(--header-h);
-  transition: background 0.4s, box-shadow 0.4s, transform 0.4s var(--ease-out-expo);
+  /* スクロール前から常に背景を表示してハンバーガーを視認しやすく */
+  background: rgba(8, 8, 16, 0.82);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: background 0.4s, box-shadow 0.4s;
 }
 .site-header.header--scrolled {
-  background: rgba(8, 8, 16, 0.88);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(8, 8, 16, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   box-shadow: 0 1px 0 var(--clr-border), var(--shadow-purple);
 }
 /* header--hidden は廃止（常時追尾仕様） */
@@ -566,7 +574,6 @@ body { animation: page-in 0.5s var(--ease-out-expo) both; }
   font-size: 0.65rem;
   letter-spacing: 0.35em;
   color: var(--clr-cyan);
-  text-transform: uppercase;
   margin-bottom: 0.75rem;
   display: flex; align-items: center; gap: 0.75rem;
 }
@@ -620,6 +627,18 @@ body { animation: page-in 0.5s var(--ease-out-expo) both; }
 @media (max-width: 768px) {
   .nav-overlay { display: block; pointer-events: none; }
   body.nav-open { overflow: hidden; }
+}
+
+/* ── AI Credit ────────────────────────────────────────────── */
+.ai-credit {
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  color: var(--clr-muted);
+  opacity: 0.45;
+  padding: 0.75rem 1rem 1.25rem;
+  background: var(--clr-bg-2);
 }
 
 /* ── Shared Keyframes ─────────────────────────────────────── */

@@ -224,3 +224,14 @@
 @media (max-width: 500px) {
   .member-card { height: 380px; }
 }
+
+/* ── JSON描画エラー時 ──────────────────────────────────────── */
+.member-empty {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  color: var(--clr-muted);
+  opacity: 0.6;
+  padding: 2rem 0;
+  text-align: center;
+}

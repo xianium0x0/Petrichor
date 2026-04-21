@@ -186,6 +186,15 @@
   background: var(--clr-bg-2);
 }
 
+/* ── YouTube セクション専用背景 ─────────────────────────────── */
+#pickup {
+  background:
+    radial-gradient(ellipse 80% 60% at 15% 50%, rgba(109, 40, 217, 0.22) 0%, transparent 65%),
+    radial-gradient(ellipse 60% 80% at 85% 30%, rgba(8, 145, 178, 0.18) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 50% at 50% 100%, rgba(155, 93, 229, 0.12) 0%, transparent 70%),
+    var(--clr-bg-2);
+}
+
 /* ── YouTube Embed ────────────────────────────────────────── */
 .yt-wrap {
   max-width: 800px;
