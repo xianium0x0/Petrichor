@@ -78,7 +78,7 @@ const Loader = (() => {
     const preloader = document.getElementById('preloader');
     if (!preloader) return;
 
-    const minTime = 800;
+    const minTime = 1400; // バーアニメ(1.2s) + フェード余裕
     const startTime = Date.now();
 
     const hide = () => {

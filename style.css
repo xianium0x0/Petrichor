@@ -100,7 +100,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 .preloader-bar {
   height: 100%;
   background: var(--grad-text);
-  animation: preloader-load 0.9s var(--ease-out-expo) forwards;
+  animation: preloader-load 1.2s var(--ease-out-expo) forwards;
 }
 /* ∅ シンボルを cyan で確実に表示（-webkit-text-fill-color の上書き） */
 .preloader-symbol {
@@ -636,9 +636,11 @@ body { animation: page-in 0.5s var(--ease-out-expo) both; }
   font-size: 0.6rem;
   letter-spacing: 0.12em;
   color: var(--clr-muted);
-  opacity: 0.45;
-  padding: 0.75rem 1rem 1.25rem;
+  opacity: 0.4;
+  /* フッターと同じ背景・余白でひと続きに見せる */
   background: var(--clr-bg-2);
+  padding: 0 clamp(1.25rem, 5vw, 3rem) 1.5rem;
+  margin: 0;
 }
 
 /* ── Shared Keyframes ─────────────────────────────────────── */

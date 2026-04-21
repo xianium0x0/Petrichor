@@ -10,7 +10,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+  /* overflow:hidden を除去: filter/transformを持つ子要素がiOS Safariで
+     position:fixedのヘッダー・カーソルを封じ込めてしまうため */
   background: var(--grad-hero);
   padding: calc(var(--header-h) + 2rem) clamp(1.25rem, 5vw, 3rem) 4rem;
 }
@@ -24,12 +25,16 @@
   opacity: 0.7;
 }
 
-/* Orbs */
+/* Orbs
+   z-index:-1 で hero-inner より後ろに配置。
+   filter:blur を持つ要素が fixed 要素を封じ込める問題を防ぐため
+   orbコンテナは isolate しない。 */
 .hero-orb {
   position: absolute;
   border-radius: 50%;
   filter: blur(90px);
   pointer-events: none;
+  z-index: 0;
   animation: orb-float 8s ease-in-out infinite;
 }
 .hero-orb--1 {
@@ -97,12 +102,15 @@
   color: var(--clr-cyan);
 }
 
-/* Title */
+/* Title
+   Cinzel はスモールキャップスフォントのため小文字が大文字化される。
+   グループ名の正しい大小文字表記のため Cormorant Garamond を使用。 */
 .hero-title {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: clamp(3.5rem, 12vw, 9rem);
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  font-weight: 600;
+  font-style: normal;
+  letter-spacing: 0.08em;
   line-height: 1;
   background: var(--grad-text);
   -webkit-background-clip: text;
