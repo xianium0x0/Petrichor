@@ -116,6 +116,18 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   from { width: 0; } to { width: 100%; }
 }
 
+/* ── Page Transition Loading Bar（他ページ遷移時・軽微） ─────── */
+#transition-bar {
+  position: fixed; top: 0; left: 0; z-index: 10002;
+  height: 2px; width: 0;
+  background: var(--grad-text);
+  transition: width 0.6s var(--ease-out-expo);
+  pointer-events: none;
+}
+#transition-bar.transition-bar--run {
+  width: 100%;
+}
+
 /* ── Scroll Progress Bar ──────────────────────────────────── */
 #scroll-progress {
   position: fixed; top: 0; left: 0; z-index: 10001;
@@ -124,52 +136,21 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   transition: width 0.1s linear;
 }
 
-/* ── Custom Cursor ────────────────────────────────────────── */
-/* タッチデバイス(スマホ)ではデフォルトカーソルを維持 */
+/* ── Custom Cursor (SVG inline方式) ────────────────────────── */
+/* position:fixed封じ込め問題を回避するためSVG cursor URLで実装 */
+/* タッチデバイス(スマホ)ではデフォルトカーソルを維持            */
+
+/* 通常カーソル: 紫の菱形＋細い十字 */
 @media (hover: hover) and (pointer: fine) {
-  * { cursor: none !important; }
-}
+  * {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='6' fill='%23c084fc' fill-opacity='0.95'/%3E%3Ccircle cx='16' cy='16' r='11' fill='none' stroke='%239b5de5' stroke-width='1.5' stroke-opacity='0.7'/%3E%3Cline x1='16' y1='2' x2='16' y2='8' stroke='%2367e8f9' stroke-width='1' stroke-opacity='0.6'/%3E%3Cline x1='16' y1='24' x2='16' y2='30' stroke='%2367e8f9' stroke-width='1' stroke-opacity='0.6'/%3E%3Cline x1='2' y1='16' x2='8' y2='16' stroke='%2367e8f9' stroke-width='1' stroke-opacity='0.6'/%3E%3Cline x1='24' y1='16' x2='30' y2='16' stroke='%2367e8f9' stroke-width='1' stroke-opacity='0.6'/%3E%3C/svg%3E") 16 16, crosshair !important;
+  }
 
-/* 外側リング：大きめ・遅延追随 */
-.cursor-ring {
-  position: fixed; top: 0; left: 0;
-  /* preloader(10000)より上、他すべての要素より前面に */
-  z-index: 100000;
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  border: 1.5px solid rgba(192, 132, 252, 0.85);
-  pointer-events: none;
-  margin-left: -18px; margin-top: -18px;
-  transition: width 0.35s var(--ease-out-expo),
-              height 0.35s var(--ease-out-expo),
-              margin 0.35s var(--ease-out-expo),
-              border-color 0.3s,
-              opacity 0.3s;
+  /* ホバー時: シアンの拡大リング */
+  a, button, [data-cursor-expand] {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 44 44'%3E%3Ccircle cx='22' cy='22' r='7' fill='%2367e8f9' fill-opacity='0.9'/%3E%3Ccircle cx='22' cy='22' r='18' fill='none' stroke='%2367e8f9' stroke-width='1.5' stroke-opacity='0.6' stroke-dasharray='4 3'/%3E%3C/svg%3E") 22 22, pointer !important;
+  }
 }
-.cursor-ring--hover {
-  width: 56px; height: 56px;
-  margin-left: -28px; margin-top: -28px;
-  border-color: rgba(103, 232, 249, 0.95);
-}
-.cursor-ring--hidden { opacity: 0; }
-
-/* 内側ドット：即座に追随 */
-.cursor-dot {
-  position: fixed; top: 0; left: 0;
-  z-index: 100001;
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  background: #c084fc;
-  pointer-events: none;
-  margin-left: -4px; margin-top: -4px;
-  transition: width 0.2s, height 0.2s, margin 0.2s, background 0.25s, opacity 0.3s;
-}
-.cursor-dot--hover {
-  width: 5px; height: 5px;
-  margin-left: -2.5px; margin-top: -2.5px;
-  background: var(--clr-cyan);
-}
-.cursor-dot--hidden { opacity: 0; }
 
 /* ── Header ───────────────────────────────────────────────── */
 .site-header {
@@ -192,7 +173,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   max-width: 1200px; margin: 0 auto;
   height: 100%;
   padding: 0 clamp(1.25rem, 4vw, 2.5rem);
-  display: flex; align-items: center; gap: 2rem;
+  display: flex; align-items: center;
 }
 .header-logo { flex-shrink: 0; }
 .logo-link { display: flex; flex-direction: column; }
@@ -213,7 +194,6 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   font-size: 0.55rem;
   letter-spacing: 0.25em;
   color: var(--clr-muted);
-  text-transform: uppercase;
   margin-top: 3px;
 }
 
@@ -221,20 +201,22 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 .site-nav {
   position: fixed;
   top: 0; right: 0; bottom: 0;
-  width: min(320px, 82vw);
+  width: min(300px, 82vw);
   background: rgba(22, 18, 48, 0.97);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   border-left: 1px solid rgba(160, 100, 255, 0.35);
-  padding: calc(var(--header-h) + 2.5rem) 2.5rem 2.5rem;
+  /* 上部: ハンバーガーボタン分の余白 / 下部: 安全エリア対応 */
+  padding: calc(var(--header-h) + 3rem) 2rem 2rem;
   transform: translateX(100%);
   transition: transform 0.42s var(--ease-out-expo);
-  z-index: 999;
+  z-index: 1000; /* ハンバーガー(1001)より後ろ、コンテンツより前 */
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   gap: 0;
   overflow-y: auto;
+  box-sizing: border-box;
 }
 .site-nav.site-nav--open { transform: none; }
 
@@ -285,20 +267,29 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   font-size: 0.6rem;
   letter-spacing: 0.25em;
   color: rgba(160, 100, 255, 0.35);
-  text-transform: uppercase;
 }
 
-/* Hamburger — 常に表示 */
+/* Hamburger — ヘッダーと独立したfixed要素 / スクロール追従 */
 .nav-toggle {
+  position: fixed;
+  top: calc((var(--header-h) - 44px) / 2);
+  right: clamp(1rem, 3vw, 1.75rem);
+  z-index: 1001; /* ヘッダー(1000)より前面 */
   display: flex;
   flex-direction: column;
   gap: 6px;
   padding: 10px;
-  margin-left: auto;
   border-radius: 4px;
-  transition: background 0.25s;
+  background: rgba(8, 8, 16, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(155, 93, 229, 0.2);
+  transition: background 0.25s, border-color 0.25s;
 }
-.nav-toggle:hover { background: rgba(155, 93, 229, 0.12); }
+.nav-toggle:hover {
+  background: rgba(155, 93, 229, 0.18);
+  border-color: rgba(155, 93, 229, 0.5);
+}
 .hamburger-line {
   display: block; width: 26px; height: 1.5px;
   background: var(--clr-purple-lt);

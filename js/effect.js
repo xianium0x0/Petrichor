@@ -112,64 +112,10 @@ const Effect = (() => {
   };
 
   // ── Custom Cursor ─────────────────────────────────────────
-  // タッチデバイスでは起動しない。
-  // ドット（即時追随）＋リング（遅延追随）の二重構造で視認性を確保。
+  // SVG cursor URL方式に変更したためJSによるDOM生成は不要。
+  // カーソルデザインは style.css の @media (hover:hover) で定義。
   const initCursorGlow = () => {
-    if (window.matchMedia('(hover: none)').matches) return;
-
-    // 要素生成
-    const ring = document.createElement('div');
-    ring.className = 'cursor-ring cursor-ring--hidden';
-    const dot  = document.createElement('div');
-    dot.className  = 'cursor-dot cursor-dot--hidden';
-    document.body.appendChild(ring);
-    document.body.appendChild(dot);
-
-    let mx = 0, my = 0;   // マウス実座標
-    let rx = 0, ry = 0;   // リング追随座標
-    let visible = false;
-
-    // マウス移動：ドットは即座に、リングはRAFで遅延追随
-    document.addEventListener('mousemove', (e) => {
-      mx = e.clientX;
-      my = e.clientY;
-      dot.style.transform = `translate(${mx}px, ${my}px)`;
-      if (!visible) {
-        visible = true;
-        ring.classList.remove('cursor-ring--hidden');
-        dot.classList.remove('cursor-dot--hidden');
-        rx = mx; ry = my;
-      }
-    });
-
-    // 画面外に出たら非表示
-    document.addEventListener('mouseleave', () => {
-      visible = false;
-      ring.classList.add('cursor-ring--hidden');
-      dot.classList.add('cursor-dot--hidden');
-    });
-
-    // リングのなめらか追随（イージング）
-    const animate = () => {
-      rx += (mx - rx) * 0.10;
-      ry += (my - ry) * 0.10;
-      ring.style.transform = `translate(${rx}px, ${ry}px)`;
-      requestAnimationFrame(animate);
-    };
-    animate();
-
-    // ホバー時：リング拡大＋ドット縮小でクリック感を演出
-    const hoverEls = document.querySelectorAll('a, button, [data-cursor-expand]');
-    hoverEls.forEach(el => {
-      el.addEventListener('mouseenter', () => {
-        ring.classList.add('cursor-ring--hover');
-        dot.classList.add('cursor-dot--hover');
-      });
-      el.addEventListener('mouseleave', () => {
-        ring.classList.remove('cursor-ring--hover');
-        dot.classList.remove('cursor-dot--hover');
-      });
-    });
+    // no-op: CSS SVG cursorで実装済み
   };
 
   // ── Parallax ───────────────────────────────────────────────
