@@ -9,32 +9,22 @@
 const Layout = (() => {
 
   // ── Sticky Header ──────────────────────────────────────────
+  // スクロールで隠れず、常にヘッダーを追尾させる。
+  // スクロール量に応じて背景を強調するスタイルのみ切り替える。
   const initStickyHeader = () => {
     const header = document.getElementById('site-header');
     if (!header) return;
 
-    let lastY = 0;
     let ticking = false;
 
     const onScroll = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
-          const currentY = window.scrollY;
-
-          if (currentY > 60) {
+          if (window.scrollY > 60) {
             header.classList.add('header--scrolled');
           } else {
             header.classList.remove('header--scrolled');
           }
-
-          // Hide on scroll down, show on scroll up
-          if (currentY > lastY && currentY > 120) {
-            header.classList.add('header--hidden');
-          } else {
-            header.classList.remove('header--hidden');
-          }
-
-          lastY = currentY;
           ticking = false;
         });
         ticking = true;

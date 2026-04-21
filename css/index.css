@@ -351,6 +351,13 @@
 }
 .news-item:hover .news-title { color: var(--clr-purple-lt); }
 
+/* ── News More Button ────────────────────────────────────── */
+.news-more {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
 /* ── CTA Section ──────────────────────────────────────────── */
 .cta-section { text-align: center; position: relative; overflow: hidden; }
 .cta-bg {

@@ -111,40 +111,64 @@ const Effect = (() => {
     };
   };
 
-  // ── Cursor Glow ────────────────────────────────────────────
+  // ── Custom Cursor ─────────────────────────────────────────
+  // タッチデバイスでは起動しない。
+  // ドット（即時追随）＋リング（遅延追随）の二重構造で視認性を確保。
   const initCursorGlow = () => {
-    // Only on non-touch devices
     if (window.matchMedia('(hover: none)').matches) return;
 
-    const glow = document.createElement('div');
-    glow.className = 'cursor-glow';
-    document.body.appendChild(glow);
+    // 要素生成
+    const ring = document.createElement('div');
+    ring.className = 'cursor-ring cursor-ring--hidden';
+    const dot  = document.createElement('div');
+    dot.className  = 'cursor-dot cursor-dot--hidden';
+    document.body.appendChild(ring);
+    document.body.appendChild(dot);
 
-    let mx = -200, my = -200;
-    let cx = -200, cy = -200;
-    let raf;
+    let mx = 0, my = 0;   // マウス実座標
+    let rx = 0, ry = 0;   // リング追随座標
+    let visible = false;
 
+    // マウス移動：ドットは即座に、リングはRAFで遅延追随
     document.addEventListener('mousemove', (e) => {
       mx = e.clientX;
       my = e.clientY;
+      dot.style.transform = `translate(${mx}px, ${my}px)`;
+      if (!visible) {
+        visible = true;
+        ring.classList.remove('cursor-ring--hidden');
+        dot.classList.remove('cursor-dot--hidden');
+        rx = mx; ry = my;
+      }
     });
 
+    // 画面外に出たら非表示
     document.addEventListener('mouseleave', () => {
-      mx = -200; my = -200;
+      visible = false;
+      ring.classList.add('cursor-ring--hidden');
+      dot.classList.add('cursor-dot--hidden');
     });
 
+    // リングのなめらか追随（イージング）
     const animate = () => {
-      cx += (mx - cx) * 0.12;
-      cy += (my - cy) * 0.12;
-      glow.style.transform = `translate(${cx}px, ${cy}px)`;
-      raf = requestAnimationFrame(animate);
+      rx += (mx - rx) * 0.10;
+      ry += (my - ry) * 0.10;
+      ring.style.transform = `translate(${rx}px, ${ry}px)`;
+      requestAnimationFrame(animate);
     };
     animate();
 
-    // Scale up on hoverable elements
-    document.querySelectorAll('a, button, [data-cursor-expand]').forEach(el => {
-      el.addEventListener('mouseenter', () => glow.classList.add('cursor-glow--expand'));
-      el.addEventListener('mouseleave', () => glow.classList.remove('cursor-glow--expand'));
+    // ホバー時：リング拡大＋ドット縮小でクリック感を演出
+    const hoverEls = document.querySelectorAll('a, button, [data-cursor-expand]');
+    hoverEls.forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        ring.classList.add('cursor-ring--hover');
+        dot.classList.add('cursor-dot--hover');
+      });
+      el.addEventListener('mouseleave', () => {
+        ring.classList.remove('cursor-ring--hover');
+        dot.classList.remove('cursor-dot--hover');
+      });
     });
   };
 
