@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MEMBER — Petrich∅r</title>
+  <meta name="description" content="Petrich∅r メンバー紹介ページ。">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="css/member.css">
+</head>
+<body>
+
+  <div id="preloader">
+    <p class="preloader-logo">Petrich<span class="preloader-symbol">∅</span>r</p>
+    <div class="preloader-bar-wrap"><div class="preloader-bar"></div></div>
+  </div>
+
+  <div id="scroll-progress" aria-hidden="true"></div>
+  <div id="header-placeholder"></div>
+
+  <!-- ====================================================
+       PAGE BANNER
+  ===================================================== -->
+  <section class="page-banner" aria-label="ページタイトル">
+    <div class="page-banner-inner">
+      <p class="page-banner-label">Petrich∅r</p>
+      <h1 class="page-banner-title">Member</h1>
+      <p class="page-banner-sub">— 闇の中で輝く、5つの星 —</p>
+    </div>
+    <div class="banner-particles" id="banner-canvas-wrap" aria-hidden="true">
+      <canvas id="banner-canvas"></canvas>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       MEMBER GRID
+  ===================================================== -->
+  <section class="section member-section" aria-label="メンバー一覧">
+    <div class="section-inner">
+      <p class="section-desc member-intro" data-reveal>
+        各メンバーのカードをタップ / クリックすると詳細プロフィールが表示されます。
+      </p>
+
+      <!-- ★ data/members.json を編集するとここに反映されます -->
+      <div class="member-grid" id="member-grid"></div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <div id="footer-placeholder"></div>
+  <button id="back-to-top" aria-label="ページ上部へ戻る">↑</button>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

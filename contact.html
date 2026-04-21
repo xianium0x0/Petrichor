@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CONTACT — Petrich∅r</title>
+  <meta name="description" content="Petrich∅r 関係者SNS・連絡先ページ。">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="css/contact.css">
+</head>
+<body>
+
+  <div id="preloader">
+    <p class="preloader-logo">Petrich<span class="preloader-symbol">∅</span>r</p>
+    <div class="preloader-bar-wrap"><div class="preloader-bar"></div></div>
+  </div>
+
+  <div id="scroll-progress" aria-hidden="true"></div>
+  <div id="header-placeholder"></div>
+
+  <!-- PAGE BANNER -->
+  <section class="page-banner" aria-label="ページタイトル">
+    <div class="page-banner-inner">
+      <p class="page-banner-label">Petrich∅r</p>
+      <h1 class="page-banner-title">Contact</h1>
+      <p class="page-banner-sub">— 繋がり、そして広がる —</p>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       OFFICIAL SNS
+       ★ data/contact.json の officialSns を編集してください
+  ===================================================== -->
+  <section class="section" id="official-sns" aria-label="公式SNS">
+    <div class="section-inner">
+      <div class="section-label" data-reveal>OFFICIAL</div>
+      <h2 class="section-title" data-reveal>Official SNS</h2>
+      <div class="section-divider" data-reveal></div>
+      <p class="section-desc" data-reveal>
+        グループ公式アカウントでは、最新情報・ライブレポート・
+        オフショットなどを随時発信しています。
+      </p>
+      <div class="sns-grid" id="sns-grid" data-reveal data-stagger="0.1"></div>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       MEMBER SNS
+       ★ data/contact.json の memberSns を編集してください
+  ===================================================== -->
+  <section class="section section--dark" id="member-sns" aria-label="メンバーSNS">
+    <div class="section-inner">
+      <div class="section-label" data-reveal>MEMBERS</div>
+      <h2 class="section-title" data-reveal>Member SNS</h2>
+      <div class="section-divider" data-reveal></div>
+      <div class="member-sns-list" id="member-sns-list" data-reveal data-stagger="0.07"></div>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       BUSINESS CONTACT
+       ★ data/contact.json の business を編集してください
+  ===================================================== -->
+  <section class="section" id="business" aria-label="関係者・業務連絡">
+    <div class="section-inner">
+      <div class="section-label" data-reveal>BUSINESS</div>
+      <h2 class="section-title" data-reveal>Business Contact</h2>
+      <div class="section-divider" data-reveal></div>
+      <p class="section-desc" data-reveal>
+        取材・出演依頼・コラボレーション・その他業務に関するお問い合わせは、
+        下記よりご連絡ください。
+      </p>
+      <div class="contact-cards" id="business-cards" data-reveal data-stagger="0.1"></div>
+      <p class="contact-note text-muted font-mono" data-reveal>
+        ※ ファンの方からのメッセージは各メンバーのSNSよりお送りください。<br>
+        ※ お返事にはお時間をいただく場合がございます。
+      </p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <div id="footer-placeholder"></div>
+  <button id="back-to-top" aria-label="ページ上部へ戻る">↑</button>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

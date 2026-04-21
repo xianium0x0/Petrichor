@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Petrich∅r — Underground Idol</title>
+  <meta name="description" content="地下アイドルグループ Petrich∅r 公式サイト。雨と路上の香りから生まれた、ダークビューティーアイドル。">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+
+  <!-- Preloader -->
+  <div id="preloader">
+    <p class="preloader-logo">Petrich<span class="preloader-symbol">∅</span>r</p>
+    <div class="preloader-bar-wrap"><div class="preloader-bar"></div></div>
+  </div>
+
+  <!-- Scroll Progress -->
+  <div id="scroll-progress" aria-hidden="true"></div>
+
+  <!-- Header Placeholder -->
+  <div id="header-placeholder"></div>
+
+  <!-- ====================================================
+       HERO
+  ===================================================== -->
+  <section class="hero" aria-label="ヒーローセクション">
+    <canvas class="hero-canvas" id="hero-canvas" aria-hidden="true"></canvas>
+
+    <!-- Background orbs -->
+    <div class="hero-orb hero-orb--1" aria-hidden="true"></div>
+    <div class="hero-orb hero-orb--2" aria-hidden="true"></div>
+    <div class="hero-orb hero-orb--3" aria-hidden="true"></div>
+
+    <div class="hero-inner">
+      <div class="hero-eyebrow">
+        <span class="hero-eyebrow-line"></span>
+        <span class="hero-eyebrow-text">underground idol</span>
+        <span class="hero-eyebrow-line"></span>
+      </div>
+
+      <h1 class="hero-title" data-glitch>
+        Petrich<span class="hero-symbol">∅</span>r
+      </h1>
+
+      <p class="hero-sub">
+        雨が地面に触れる瞬間の香りのように、<br>
+        記憶の奥底に刻みこまれる、その音楽。
+      </p>
+
+      <div class="hero-cta">
+        <a href="member.html" class="btn hero-btn">MEET THE MEMBERS</a>
+        <a href="news.html" class="btn btn--ghost hero-btn">ALL NEWS</a>
+      </div>
+
+      <!-- Scroll indicator -->
+      <div class="hero-scroll" aria-label="スクロールしてください">
+        <span class="hero-scroll-line"></span>
+        <span class="hero-scroll-text">scroll</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       YOUTUBE EMBED
+  ===================================================== -->
+  <section class="section section--dark" id="pickup" aria-label="注目動画">
+    <div class="section-inner">
+      <div class="section-label" data-reveal>PICKUP VIDEO</div>
+      <h2 class="section-title" data-reveal>Latest Music Video</h2>
+      <div class="section-divider" data-reveal></div>
+
+      <div class="yt-wrap" data-reveal>
+        <!--
+          ★ YouTube動画IDを変更するには、下記 data-video-id の値を変更してください。
+          　 例: data-video-id="dQw4w9WgXcQ"
+          　 動画IDはYouTubeのURLの "?v=" 以降の文字列です。
+        -->
+        <div class="yt-facade" data-video-id="YOUR_VIDEO_ID_HERE" role="button" tabindex="0" aria-label="動画を再生">
+          <div class="yt-facade-overlay">
+            <div class="yt-play-btn" aria-hidden="true">
+              <svg viewBox="0 0 68 48" width="68" height="48">
+                <path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55c-2.93.78-4.63 3.26-5.42 6.19C0 13.05 0 24 0 24s0 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C68 34.95 68 24 68 24s0-10.95-1.48-16.26z" fill="rgba(155,93,229,0.85)"/>
+                <path d="M45 24 27 14v20z" fill="#fff"/>
+              </svg>
+            </div>
+            <p class="yt-facade-hint">クリックして再生</p>
+          </div>
+        </div>
+      </div>
+
+      <p class="yt-note text-muted font-mono" data-reveal>
+        ▸ 動画IDを <code>index.html</code> の <code>data-video-id</code> に設定してください
+      </p>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       ABOUT
+  ===================================================== -->
+  <section class="section" id="about" aria-label="グループ紹介">
+    <div class="about-bg-grid" aria-hidden="true"></div>
+    <div class="section-inner about-inner">
+      <div class="about-text" data-reveal>
+        <div class="section-label">ABOUT</div>
+        <h2 class="section-title">About<br>Petrich∅r</h2>
+        <div class="section-divider"></div>
+        <p class="section-desc">
+          「ペトリコール」とは、乾いた大地に雨が降り注ぐ瞬間に立ち上る、
+          あの懐かしく鋭い香りのこと。<br><br>
+          Petrich∅rは、その名のごとく、<strong>記憶と感情の境界線</strong>に宿る音楽を追い求める
+          地下アイドルグループです。<br><br>
+          ダークでゴシックな世界観と、儚くも力強いパフォーマンスで、
+          見る者の深層へと刻み込まれていく存在を目指します。
+        </p>
+        <a href="member.html" class="btn" style="margin-top:2rem">MEET US</a>
+      </div>
+
+      <div class="about-deco" aria-hidden="true" data-reveal>
+        <div class="about-deco-ring about-deco-ring--1"></div>
+        <div class="about-deco-ring about-deco-ring--2"></div>
+        <div class="about-deco-ring about-deco-ring--3"></div>
+        <div class="about-deco-text">Petrich∅r</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       NEWS / TOPICS
+  ===================================================== -->
+  <section class="section section--dark" id="news" aria-label="最新情報">
+    <div class="section-inner">
+      <div class="section-label" data-reveal>INFORMATION</div>
+      <h2 class="section-title" data-reveal>News</h2>
+      <div class="section-divider" data-reveal></div>
+
+      <!-- ★ data/news.json を編集するとここに反映されます -->
+      <ul class="news-list" id="news-list-top" data-reveal data-stagger="0.08"></ul>
+
+      <div class="news-more" data-reveal>
+        <a href="news.html" class="btn">MORE NEWS</a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Footer Placeholder -->
+  <div id="footer-placeholder"></div>
+
+  <!-- AI Credit -->
+  <p class="ai-credit">このHPは生成AIのサポートによって作成しています。</p>
+
+  <!-- Back to Top -->
+  <button id="back-to-top" aria-label="ページ上部へ戻る">↑</button>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
