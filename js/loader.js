@@ -29,9 +29,10 @@ const Loader = (() => {
       <ul class="nav-list">
         <li class="nav-item"><a href="index.html"   class="nav-link">HOME</a></li>
         <li class="nav-item"><a href="member.html"  class="nav-link">MEMBER</a></li>
-        <li class="nav-item"><a href="history.html" class="nav-link">HISTORY</a></li>
+        <li class="nav-item"><a href="news.html" class="nav-link">NEWS</a></li>
         <li class="nav-item"><a href="contact.html" class="nav-link">CONTACT</a></li>
       </ul>
+      <p class="nav-deco">Petrich&#x2205;r &mdash; underground idol</p>
     </nav>
     <div class="nav-overlay" id="nav-overlay"></div>
   </div>
@@ -54,7 +55,7 @@ const Loader = (() => {
       <ul class="footer-nav-list">
         <li><a href="index.html"   class="footer-nav-link">HOME</a></li>
         <li><a href="member.html"  class="footer-nav-link">MEMBER</a></li>
-        <li><a href="history.html" class="footer-nav-link">HISTORY</a></li>
+        <li><a href="news.html" class="footer-nav-link">NEWS</a></li>
         <li><a href="contact.html" class="footer-nav-link">CONTACT</a></li>
       </ul>
     </nav>

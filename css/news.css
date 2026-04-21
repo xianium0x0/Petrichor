@@ -1,0 +1,58 @@
+/* ============================================================
+   Petrich∅r — News Page Styles
+   css/news.css
+   ============================================================ */
+
+/* news-list / news-item は css/index.css と共通クラスを使用。
+   index.css を読み込まないページ用に必要なスタイルをここで定義する。 */
+
+.news-list { display: flex; flex-direction: column; gap: 0; }
+
+.news-item {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--clr-border);
+  transition: background 0.3s;
+}
+.news-item:first-child { border-top: 1px solid var(--clr-border); }
+.news-item:hover { background: rgba(155,93,229,0.04); }
+
+.news-date {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  color: var(--clr-muted);
+  white-space: nowrap;
+}
+.news-tag {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  padding: 0.2em 0.7em;
+  border: 1px solid var(--clr-cyan);
+  color: var(--clr-cyan);
+  white-space: nowrap;
+}
+.news-title {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  letter-spacing: 0.03em;
+  color: var(--clr-white);
+  transition: color 0.3s;
+}
+.news-item:hover .news-title { color: var(--clr-purple-lt); }
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .news-item {
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+    gap: 0.4rem 0.75rem;
+  }
+  .news-date { grid-column: 1; grid-row: 1; }
+  .news-tag  { grid-column: 2; grid-row: 1; }
+  .news-title { grid-column: 1 / -1; grid-row: 2; }
+}
