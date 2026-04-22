@@ -55,10 +55,10 @@ const Loader = (() => {
     </div>
     <nav class="footer-nav" aria-label="フッターナビゲーション">
       <ul class="footer-nav-list">
-        <li><a href="index.html"   class="footer-nav-link">HOME</a></li>
-        <li><a href="member.html"  class="footer-nav-link">MEMBER</a></li>
-        <li><a href="news.html" class="footer-nav-link">NEWS</a></li>
-        <li><a href="contact.html" class="footer-nav-link">CONTACT</a></li>
+        <li><a href="index.html"   class="footer-nav-link">Home</a></li>
+        <li><a href="member.html"  class="footer-nav-link">Member</a></li>
+        <li><a href="news.html"    class="footer-nav-link">News</a></li>
+        <li><a href="contact.html" class="footer-nav-link">Contact</a></li>
       </ul>
     </nav>
     <div class="footer-divider"></div>
@@ -75,38 +75,50 @@ const Loader = (() => {
   };
 
   // ── Preloader ──────────────────────────────────────────────
-  // index.html専用の全画面ローディング演出。
+  // 全ページ共通のゲーム風ローディング演出。
   // minTime を必ず待つことでバーアニメーション(1.2s)が必ず見える。
   const initPreloader = () => {
     const preloader = document.getElementById('preloader');
     if (!preloader) return;
 
-    const minTime = 1500; // バーアニメ(1.2s) + フェード余裕
+    const minTime = 1600; // バーアニメ(1.2s) + 余裕
     const startTime = Date.now();
+
+    // パーセント表示アニメーション
+    const pctEl = preloader.querySelector('.preloader-progress-pct');
+    if (pctEl) {
+      let pct = 0;
+      const countUp = setInterval(() => {
+        pct = Math.min(pct + Math.floor(Math.random() * 18 + 6), 99);
+        pctEl.textContent = pct + '%';
+        if (pct >= 99) clearInterval(countUp);
+      }, 120);
+    }
 
     const hide = () => {
       const elapsed = Date.now() - startTime;
       const remaining = Math.max(0, minTime - elapsed);
-      // remaining が 0 でも必ず次のマクロタスクで実行（即時消去を防ぐ）
       setTimeout(() => {
-        preloader.classList.add('preloader--hidden');
-        preloader.addEventListener('transitionend', () => {
-          preloader.remove();
-          document.body.classList.add('page-loaded');
-        }, { once: true });
-        // transitionend が発火しない環境向けフォールバック
+        // 完了時は100%にする
+        if (pctEl) pctEl.textContent = '100%';
         setTimeout(() => {
-          if (preloader.isConnected) {
+          preloader.classList.add('preloader--hidden');
+          preloader.addEventListener('transitionend', () => {
             preloader.remove();
             document.body.classList.add('page-loaded');
-          }
-        }, 800);
+          }, { once: true });
+          // フォールバック
+          setTimeout(() => {
+            if (preloader.isConnected) {
+              preloader.remove();
+              document.body.classList.add('page-loaded');
+            }
+          }, 900);
+        }, 150);
       }, Math.max(remaining, 50));
     };
 
-    // readyState に関わらず常に load イベントを待ってから計測
     if (document.readyState === 'complete') {
-      // 既にロード済みでも minTime は必ず待つ
       hide();
     } else {
       window.addEventListener('load', hide, { once: true });

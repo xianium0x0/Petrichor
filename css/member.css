@@ -20,10 +20,29 @@
 }
 
 /* ── Member Grid ──────────────────────────────────────────── */
+/* スマホ: 1列縦並び（変更なし） */
 .member-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(240px, 100%), 1fr));
-  gap: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* PC: 2+2+1 レイアウト（flexboxで確実に制御） */
+@media (min-width: 768px) {
+  .member-grid {
+    display: grid;
+    /* 6列グリッドで 2+2+1 を中央揃え */
+    grid-template-columns: repeat(6, 1fr);
+    gap: 1.75rem;
+  }
+  /* 1列目: 1・2番目を左右に2枚 */
+  .member-grid .member-card:nth-child(1) { grid-column: 1 / 4; }
+  .member-grid .member-card:nth-child(2) { grid-column: 4 / 7; }
+  /* 2列目: 3・4番目を左右に2枚 */
+  .member-grid .member-card:nth-child(3) { grid-column: 1 / 4; }
+  .member-grid .member-card:nth-child(4) { grid-column: 4 / 7; }
+  /* 3列目: 5番目を中央に1枚 */
+  .member-grid .member-card:nth-child(5) { grid-column: 2 / 6; }
 }
 
 /* ── Member Card ──────────────────────────────────────────── */
@@ -41,11 +60,13 @@
   position: relative;
   width: 100%; height: 100%;
   transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
   transition: transform 0.7s var(--ease-out-expo);
   border: 1px solid var(--clr-border);
 }
 .member-card.member-card--flipped .member-card-inner {
   transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
 }
 
 /* Front & Back shared */
@@ -59,6 +80,27 @@
   flex-direction: column;
   background: var(--clr-surface);
   overflow: hidden;
+}
+
+/* スマホ対策: backface-visibilityが効かないiOS Safari向けに
+   visibility で表裏を明示的に切り替える。
+   フリップ前: 表=visible / 裏=hidden
+   フリップ後: 表=hidden  / 裏=visible（遅延なしで即切替）       */
+.member-card-front {
+  visibility: visible;
+  transition: visibility 0s 0s;
+}
+.member-card-back {
+  visibility: hidden;
+  transition: visibility 0s 0.35s; /* フリップ完了後に表示 */
+}
+.member-card.member-card--flipped .member-card-front {
+  visibility: hidden;
+  transition: visibility 0s 0.35s; /* フリップ完了後に非表示 */
+}
+.member-card.member-card--flipped .member-card-back {
+  visibility: visible;
+  transition: visibility 0s 0s;
 }
 .member-card-front::before,
 .member-card-back::before {

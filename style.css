@@ -70,44 +70,188 @@ a { color: inherit; text-decoration: none; }
 ul { list-style: none; }
 button { cursor: pointer; border: none; background: none; font: inherit; }
 
-/* ── Preloader ────────────────────────────────────────────── */
+/* ── Preloader — ゲーム風演出 ─────────────────────────────── */
 #preloader {
   position: fixed; inset: 0; z-index: 10000;
   background: var(--clr-black);
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
-  transition: opacity 0.6s var(--ease-out-expo), visibility 0.6s;
+  gap: 0;
+  transition: opacity 0.7s var(--ease-out-expo), visibility 0.7s;
+  overflow: hidden;
 }
 #preloader.preloader--hidden { opacity: 0; visibility: hidden; }
 
+/* 背景スキャンライン */
+#preloader::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(155,93,229,0.03) 2px,
+    rgba(155,93,229,0.03) 4px
+  );
+  pointer-events: none;
+  animation: pl-scanline 8s linear infinite;
+}
+/* 外枠コーナー装飾 */
+#preloader::after {
+  content: '';
+  position: absolute;
+  inset: 20px;
+  border: 1px solid rgba(155,93,229,0.15);
+  pointer-events: none;
+  animation: pl-border-pulse 2s ease-in-out infinite;
+}
+
+/* ロゴ */
 .preloader-logo {
-  font-family: var(--font-display);
-  font-size: clamp(2rem, 6vw, 3.5rem);
-  letter-spacing: 0.15em;
+  font-family: var(--font-body);
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  font-weight: 600;
+  font-style: normal;
+  letter-spacing: 0.18em;
   background: var(--grad-text);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: preloader-pulse 1.5s ease-in-out infinite;
+  position: relative;
+  z-index: 1;
+  animation: pl-logo-in 0.6s var(--ease-out-expo) both;
+  filter: drop-shadow(0 0 24px rgba(155,93,229,0.5));
 }
-.preloader-bar-wrap {
-  margin-top: 2rem;
-  width: 180px; height: 2px;
-  background: rgba(255,255,255,0.08);
-  border-radius: 99px;
-  overflow: hidden;
-}
-.preloader-bar {
-  height: 100%;
-  background: var(--grad-text);
-  animation: preloader-load 1.2s var(--ease-out-expo) forwards;
-}
-/* ∅ シンボルを cyan で確実に表示（-webkit-text-fill-color の上書き） */
+/* ∅ シンボルを cyan で確実に表示 */
 .preloader-symbol {
   -webkit-text-fill-color: var(--clr-cyan);
   color: var(--clr-cyan);
 }
 
+/* サブタイトル */
+.preloader-sub {
+  font-family: var(--font-mono);
+  font-size: clamp(0.55rem, 1.5vw, 0.7rem);
+  letter-spacing: 0.4em;
+  color: var(--clr-cyan);
+  margin-top: 0.5rem;
+  margin-bottom: 2.5rem;
+  position: relative; z-index: 1;
+  animation: pl-logo-in 0.6s 0.15s var(--ease-out-expo) both;
+  text-transform: none;
+}
+
+/* プログレスエリア */
+.preloader-progress-wrap {
+  position: relative; z-index: 1;
+  width: clamp(240px, 40vw, 400px);
+  animation: pl-logo-in 0.6s 0.3s var(--ease-out-expo) both;
+}
+/* ラベル行 */
+.preloader-progress-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+.preloader-progress-text {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: var(--clr-muted);
+}
+.preloader-progress-pct {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.05em;
+  color: var(--clr-purple-lt);
+  animation: pl-count 1.2s var(--ease-out-expo) forwards;
+}
+/* バー本体 */
+.preloader-bar-wrap {
+  width: 100%;
+  height: 3px;
+  background: rgba(155,93,229,0.15);
+  position: relative;
+  overflow: visible;
+}
+/* 外枠 */
+.preloader-bar-wrap::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border: 1px solid rgba(155,93,229,0.25);
+}
+.preloader-bar {
+  height: 100%;
+  background: var(--grad-text);
+  position: relative;
+  animation: preloader-load 1.2s var(--ease-out-expo) forwards;
+  box-shadow: 0 0 12px rgba(155,93,229,0.8), 0 0 24px rgba(103,232,249,0.4);
+}
+/* バー先端の光 */
+.preloader-bar::after {
+  content: '';
+  position: absolute;
+  right: 0; top: 50%;
+  transform: translateY(-50%);
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 8px var(--clr-cyan), 0 0 16px var(--clr-purple-lt);
+}
+/* セグメントライン */
+.preloader-bar-wrap::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent calc(25% - 1px),
+    rgba(0,0,0,0.4) calc(25% - 1px),
+    rgba(0,0,0,0.4) 25%
+  );
+  pointer-events: none;
+}
+
+/* コーナー装飾（4隅） */
+.preloader-corners {
+  position: absolute; inset: 0; z-index: 1;
+  pointer-events: none;
+}
+.preloader-corner {
+  position: absolute;
+  width: 20px; height: 20px;
+  border-color: var(--clr-purple-lt);
+  border-style: solid;
+  opacity: 0.6;
+  animation: pl-corner-pulse 2s ease-in-out infinite;
+}
+.preloader-corner:nth-child(1) { top: 24px; left: 24px; border-width: 2px 0 0 2px; }
+.preloader-corner:nth-child(2) { top: 24px; right: 24px; border-width: 2px 2px 0 0; animation-delay: 0.5s; }
+.preloader-corner:nth-child(3) { bottom: 24px; left: 24px; border-width: 0 0 2px 2px; animation-delay: 1s; }
+.preloader-corner:nth-child(4) { bottom: 24px; right: 24px; border-width: 0 2px 2px 0; animation-delay: 1.5s; }
+
+@keyframes pl-logo-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes pl-scanline {
+  from { background-position: 0 0; }
+  to   { background-position: 0 100px; }
+}
+@keyframes pl-border-pulse {
+  0%, 100% { opacity: 0.3; }
+  50%       { opacity: 0.8; }
+}
+@keyframes pl-corner-pulse {
+  0%, 100% { opacity: 0.4; }
+  50%       { opacity: 1; }
+}
+@keyframes pl-count {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
 @keyframes preloader-pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.5; }
@@ -178,9 +322,10 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 .header-logo { flex-shrink: 0; }
 .logo-link { display: flex; flex-direction: column; }
 .logo-text {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 1.5rem;
-  font-weight: 700;
+  font-weight: 600;
+  font-style: normal;
   letter-spacing: 0.12em;
   background: var(--grad-text);
   -webkit-background-clip: text;
@@ -234,9 +379,11 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 
 .nav-link {
   display: block;
-  font-family: var(--font-display);
-  font-size: 1.1rem;
-  letter-spacing: 0.22em;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-style: normal;
+  font-size: 1.25rem;
+  letter-spacing: 0.18em;
   color: rgba(220, 210, 255, 0.85);
   padding: 1.1rem 0.25rem;
   position: relative;
@@ -488,8 +635,10 @@ body { animation: page-in 0.5s var(--ease-out-expo) both; }
   gap: 1.5rem; text-align: center; position: relative;
 }
 .footer-logo-text {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 2rem;
+  font-weight: 600;
+  font-style: normal;
   letter-spacing: 0.15em;
   background: var(--grad-text);
   -webkit-background-clip: text;
@@ -507,9 +656,11 @@ body { animation: page-in 0.5s var(--ease-out-expo) both; }
   display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem 2rem;
 }
 .footer-nav-link {
-  font-family: var(--font-display);
-  font-size: 0.7rem;
-  letter-spacing: 0.2em;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-style: normal;
+  font-size: 0.85rem;
+  letter-spacing: 0.15em;
   color: var(--clr-muted);
   transition: color 0.3s;
 }
