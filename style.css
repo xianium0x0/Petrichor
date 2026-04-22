@@ -260,15 +260,47 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   from { width: 0; } to { width: 100%; }
 }
 
-/* ── Page Transition Loading Bar（他ページ遷移時・軽微） ─────── */
-#transition-bar {
-  position: fixed; top: 0; left: 0; z-index: 10002;
-  height: 2px; width: 0;
-  background: var(--grad-text);
-  transition: width 0.6s var(--ease-out-expo);
+/* ── Page Transition Overlay（ページ遷移時の全画面ローダー） ── */
+/* 遷移元でJS生成、遷移先では #preloader がそのまま使われる     */
+#page-overlay {
+  position: fixed; inset: 0; z-index: 10000;
+  background: var(--clr-black);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+  opacity: 0;
+  /* JSでclass付与後にフェードイン */
+  transition: opacity 0.25s var(--ease-out-expo);
   pointer-events: none;
 }
-#transition-bar.transition-bar--run {
+#page-overlay.page-overlay--visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+/* 背景スキャンライン（preloaderと同デザイン） */
+#page-overlay::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent, transparent 2px,
+    rgba(155,93,229,0.03) 2px, rgba(155,93,229,0.03) 4px
+  );
+  pointer-events: none;
+  animation: pl-scanline 8s linear infinite;
+}
+/* 外枠 */
+#page-overlay::after {
+  content: '';
+  position: absolute; inset: 20px;
+  border: 1px solid rgba(155,93,229,0.15);
+  pointer-events: none;
+  animation: pl-border-pulse 2s ease-in-out infinite;
+}
+.page-overlay-inner {
+  position: relative; z-index: 1;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 0;
   width: 100%;
 }
 
