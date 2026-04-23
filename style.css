@@ -264,19 +264,25 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 /* 遷移元でJS生成、遷移先では #preloader がそのまま使われる     */
 /* --ready クラスで display:flex に切替、--visible でフェードイン */
 #page-overlay {
-   position: fixed;
-   inset: 0; 
-  visibility: hidden;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: rgba(10, 5, 20, 0.95);
+
   opacity: 0;
   pointer-events: none;
 }
-#page-overlay.page-overlay--ready {
-  visibility: visible;
-  display: flex;
-}
+
 #page-overlay.page-overlay--visible {
-  opacity: 1;               /* 次フレームでフェードイン           */
-  pointer-events: auto;
+  opacity: 1;
+  pointer-events: all;
+}
+
 }
 /* 背景スキャンライン（preloaderと同デザイン） */
 #page-overlay::before {
@@ -368,6 +374,13 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 .po-bar-area {
   width: clamp(240px, 40vw, 400px);
 }
+/* 中央を完全固定 */
+.po-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 .po-bar-header {
   display: flex;
   justify-content: space-between;
@@ -387,11 +400,10 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   color: var(--clr-purple-lt);
 }
 .po-bar-track {
-  width: 100%;
-  height: 3px;
-  background: rgba(155,93,229,0.15);
-  position: relative;
-  overflow: visible;
+  width: 260px;
+  height: 2px;
+  background: #2a1d35;
+  overflow: hidden;
 }
 /* バー外枠 */
 .po-bar-track::before {
@@ -415,12 +427,10 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 }
 /* バー本体（widthをJSで制御） */
 .po-bar-fill {
-  height: 100%;
   width: 0%;
-  background: var(--grad-text);
-  position: relative;
-  transition: width 0.12s linear;
-  box-shadow: 0 0 12px rgba(155,93,229,0.8), 0 0 24px rgba(103,232,249,0.4);
+  height: 100%;
+  background: linear-gradient(90deg, #7b5fa8, #d3c2ff);
+  transition: width 0.2s linear;
 }
 /* バー先端の光 */
 .po-bar-fill::after {
