@@ -414,7 +414,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 /* バー本体（widthをJSで制御） */
 .po-bar-fill {
   height: 100%;
-  width: 0;
+  width: 0%;
   background: var(--grad-text);
   position: relative;
   transition: width 0.12s linear;
@@ -424,7 +424,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 .po-bar-fill::after {
   content: '';
   position: absolute;
-  right: 0; top: 50%;
+  right: 0%; top: 50%;
   transform: translateY(-50%);
   width: 6px; height: 6px;
   border-radius: 50%;
