@@ -264,40 +264,21 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 /* 遷移元でJS生成、遷移先では #preloader がそのまま使われる     */
 /* --ready クラスで display:flex に切替、--visible でフェードイン */
 #page-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: rgba(10, 5, 20, 0.95);
+  position: fixed; inset: 0; z-index: 10000;
+  background: var(--clr-black);
+  display: none;            /* JSが --ready を付けるまで非表示   */
+  align-items: center; justify-content: center;
+  overflow: hidden;
   opacity: 0;
+  transition: opacity 0.35s var(--ease-out-expo);
   pointer-events: none;
 }
-
+#page-overlay.page-overlay--ready {
+  display: flex;            /* DOMに追加後まず表示状態にする      */
+}
 #page-overlay.page-overlay--visible {
-  opacity: 1;
-  pointer-events: all;
-}
-
-/* 中央を完全固定 */
-.po-center {
-  position: relative; /* ← absoluteやめる */
-  transform: none;    /* ← 消す */
-}
-/* プログレスバー */
-.po-bar-track {
-  width: 260px;
-  height: 2px;
-  background: #2a1d35;
-  overflow: hidden;
-}
-
-.po-bar-fill {
-  width: 0%;
-  height: 100%;
-  background: linear-gradient(90deg, #7b5fa8, #d3c2ff);
-  transition: width 0.2s linear;
+  opacity: 1;               /* 次フレームでフェードイン           */
+  pointer-events: auto;
 }
 /* 背景スキャンライン（preloaderと同デザイン） */
 #page-overlay::before {
@@ -389,7 +370,6 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 .po-bar-area {
   width: clamp(240px, 40vw, 400px);
 }
-
 .po-bar-header {
   display: flex;
   justify-content: space-between;
@@ -409,10 +389,11 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   color: var(--clr-purple-lt);
 }
 .po-bar-track {
-  width: 260px;
-  height: 2px;
-  background: #2a1d35;
-  overflow: hidden;
+  width: 100%;
+  height: 3px;
+  background: rgba(155,93,229,0.15);
+  position: relative;
+  overflow: visible;
 }
 /* バー外枠 */
 .po-bar-track::before {
@@ -436,16 +417,18 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 }
 /* バー本体（widthをJSで制御） */
 .po-bar-fill {
-  width: 0%;
   height: 100%;
-  background: linear-gradient(90deg, #7b5fa8, #d3c2ff);
-  transition: width 0.2s linear;
+  width: 0;
+  background: var(--grad-text);
+  position: relative;
+  transition: width 0.12s linear;
+  box-shadow: 0 0 12px rgba(155,93,229,0.8), 0 0 24px rgba(103,232,249,0.4);
 }
 /* バー先端の光 */
 .po-bar-fill::after {
   content: '';
   position: absolute;
-  right: 0%; top: 50%;
+  right: 0; top: 50%;
   transform: translateY(-50%);
   width: 6px; height: 6px;
   border-radius: 50%;
@@ -753,16 +736,19 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 }
 
 /* ── Page Transition ──────────────────────────────────────── */
+/* page-in/out は opacity のみ（transform を使わない）
+   理由: body に transform があると position:fixed の子要素が
+         ビューポート基準にならず、プリローダーの位置がずれるため */
 .page-transitioning {
-  animation: page-out 0.4s var(--ease-in-out) forwards;
+  animation: page-out 0.35s var(--ease-in-out) forwards;
 }
 @keyframes page-out {
-  to { opacity: 0; transform: translateY(-12px); }
+  to { opacity: 0; }
 }
-body { animation: page-in 0.5s var(--ease-out-expo) both; }
+body { animation: page-in 0.45s var(--ease-out-expo) both; }
 @keyframes page-in {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: none; }
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 /* ── Button ───────────────────────────────────────────────── */
