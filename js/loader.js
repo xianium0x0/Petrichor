@@ -87,7 +87,7 @@ const Loader = (() => {
     // 遷移経由の場合は initTransitionLoader に任せる
     if (sessionStorage.getItem(TRANSITION_KEY) === '1') return;
 
-    const minTime = 1600; // バーアニメ(1.2s) + 余裕
+    const minTime = 2500; // バーアニメ(1.2s) + ゆっくり表示
     const startTime = Date.now();
 
     // パーセント表示アニメーション
@@ -148,56 +148,82 @@ const Loader = (() => {
   //           sessionStorage のフラグを見て短縮タイマーでフェードアウト
   // JS が失敗しても e.preventDefault() より前にエラーが出れば通常遷移する。
 
-  // オーバーレイ HTML（遷移元で動的生成・全ページ共通デザイン）
+  // オーバーレイ HTML（遷移元クリック時にJS生成）
+  // ※ CSSアニメーションクラス（preloader-logo等）は使わない。
+  //   それらはDOMに追加された瞬間に始まるため、display:none中でも
+  //   タイマーが進んでしまい、表示時にはアニメが終わっている。
+  //   代わりに専用クラス（page-overlay-*）でJSからスタイルを制御する。
   const buildOverlay = () => {
     const el = document.createElement('div');
     el.id = 'page-overlay';
     el.setAttribute('aria-hidden', 'true');
     el.innerHTML = `
-      <div class="page-overlay-inner">
-        <p class="preloader-logo">Petrich<span class="preloader-symbol">&#x2205;</span>r</p>
-        <p class="preloader-sub">underground idol</p>
-        <div class="preloader-progress-wrap">
-          <div class="preloader-progress-label">
-            <span class="preloader-progress-text">LOADING</span>
-            <span class="preloader-progress-pct" id="overlay-pct">0%</span>
+      <div class="po-corners">
+        <div class="po-corner po-corner--tl"></div>
+        <div class="po-corner po-corner--tr"></div>
+        <div class="po-corner po-corner--bl"></div>
+        <div class="po-corner po-corner--br"></div>
+      </div>
+      <div class="po-inner">
+        <p class="po-logo">Petrich<span class="po-symbol">&#x2205;</span>r</p>
+        <p class="po-sub">underground idol</p>
+        <div class="po-bar-area">
+          <div class="po-bar-header">
+            <span class="po-bar-label">LOADING</span>
+            <span class="po-bar-pct" id="overlay-pct">0%</span>
           </div>
-          <div class="preloader-bar-wrap">
-            <div class="preloader-bar" id="overlay-bar"></div>
+          <div class="po-bar-track">
+            <div class="po-bar-fill" id="overlay-bar"></div>
           </div>
-        </div>
-        <div class="preloader-corners">
-          <div class="preloader-corner"></div>
-          <div class="preloader-corner"></div>
-          <div class="preloader-corner"></div>
-          <div class="preloader-corner"></div>
         </div>
       </div>`;
     return el;
   };
 
-  // 遷移先: #preloader を短縮タイマーでフェードアウト
+  // 遷移先: #preloader のアニメーションをリセットして再生 → フェードアウト
+  // 問題: CSSアニメーション(preloader-load等)はHTML読み込み直後に始まり
+  //       JSが起動する頃にはほぼ終わっている。
+  // 解決: animation を none にリセット → reflow → 再設定で最初から再生させる。
   const initTransitionLoader = () => {
     const preloader = document.getElementById('preloader');
     if (!preloader) return;
 
-    // 遷移経由かどうか判定
     const isTransition = sessionStorage.getItem(TRANSITION_KEY) === '1';
-    if (!isTransition) return; // 通常ロードなら何もしない（initPreloader に任せる）
+    if (!isTransition) return;
 
     sessionStorage.removeItem(TRANSITION_KEY);
 
-    // 遷移先では短く（600ms）で閉じる
-    const pctEl = preloader.querySelector('.preloader-progress-pct');
+    // ── アニメーションをリセットして最初から再生 ──────────────
+    // バー・ロゴ・サブタイトル・プログレスエリアのアニメを全てリセット
+    const bar      = preloader.querySelector('.preloader-bar');
+    const logo     = preloader.querySelector('.preloader-logo');
+    const sub      = preloader.querySelector('.preloader-sub');
+    const wrap     = preloader.querySelector('.preloader-progress-wrap');
+    const pctEl    = preloader.querySelector('.preloader-progress-pct');
+
+    // animation: none → reflow(offsetHeight読み取り) → 元に戻す
+    [bar, logo, sub, wrap].forEach(el => {
+      if (el) { el.style.animation = 'none'; }
+    });
+    // reflow を強制（これによりアニメーションがリセットされる）
+    preloader.offsetHeight; // eslint-disable-line no-unused-expressions
+
+    [bar, logo, sub, wrap].forEach(el => {
+      if (el) { el.style.animation = ''; }
+    });
+
+    // パーセント初期化
     if (pctEl) {
+      pctEl.textContent = '0%';
       let p = 0;
       const t = setInterval(() => {
-        p = Math.min(p + Math.floor(Math.random() * 25 + 15), 99);
+        p = Math.min(p + Math.floor(Math.random() * 8 + 5), 99);
         pctEl.textContent = p + '%';
         if (p >= 99) clearInterval(t);
-      }, 60);
+      }, 100);
     }
 
+    // 1800ms後にフェードアウト
     setTimeout(() => {
       if (pctEl) pctEl.textContent = '100%';
       setTimeout(() => {
@@ -206,14 +232,15 @@ const Loader = (() => {
           preloader.remove();
           document.body.classList.add('page-loaded');
         }, { once: true });
+        // フォールバック
         setTimeout(() => {
           if (preloader.isConnected) {
             preloader.remove();
             document.body.classList.add('page-loaded');
           }
         }, 900);
-      }, 100);
-    }, 650);
+      }, 150);
+    }, 1800);
   };
 
   // 遷移元: クリック → オーバーレイ表示 → 遷移
@@ -241,29 +268,31 @@ const Loader = (() => {
         sessionStorage.setItem(TRANSITION_KEY, '1');
 
         // オーバーレイを生成して即表示
+        // display:none → display:flex → 次フレームで visible クラス付与
+        // (CSSアニメーションがDOMへの追加と同時に始まるようにする)
         const overlay = buildOverlay();
+        overlay.classList.add('page-overlay--ready');
         document.body.appendChild(overlay);
 
-        // 1フレーム後にfade-inクラスを付与
         requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            overlay.classList.add('page-overlay--visible');
-          });
+          overlay.classList.add('page-overlay--visible');
         });
 
-        // パーセントカウントアップ
+        // バーをアニメーション（JSで直接 width を変化させる）
+        const barEl = overlay.querySelector('#overlay-bar');
         const pctEl = overlay.querySelector('#overlay-pct');
         let p = 0;
         const t = setInterval(() => {
-          p = Math.min(p + Math.floor(Math.random() * 20 + 10), 99);
+          p = Math.min(p + Math.floor(Math.random() * 8 + 4), 92);
+          if (barEl) barEl.style.width = p + '%';
           if (pctEl) pctEl.textContent = p + '%';
-          if (p >= 99) clearInterval(t);
-        }, 50);
+          if (p >= 92) clearInterval(t);
+        }, 80);
 
-        // オーバーレイが見えた後に遷移
+        // オーバーレイをしっかり見せてから遷移
         setTimeout(() => {
           window.location.href = href;
-        }, 450);
+        }, 1200);
 
       } catch (err) {
         // JS失敗時: 通常遷移（e.preventDefault()前にエラーが出た場合も同様）

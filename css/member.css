@@ -92,11 +92,13 @@
 }
 .member-card-back {
   visibility: hidden;
-  transition: visibility 0s 0.35s; /* フリップ完了後に表示 */
+  /* フリップ完了(0.7s)後に裏面を表示 */
+  transition: visibility 0s 0.7s;
 }
 .member-card.member-card--flipped .member-card-front {
+  /* クリック直後に即座に表面を非表示（スマホで透けて見える問題を解消） */
   visibility: hidden;
-  transition: visibility 0s 0.35s; /* フリップ完了後に非表示 */
+  transition: visibility 0s 0s;
 }
 .member-card.member-card--flipped .member-card-back {
   visibility: visible;
