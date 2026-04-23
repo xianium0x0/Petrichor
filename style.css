@@ -267,13 +267,10 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   position: fixed;
   inset: 0;
   z-index: 9999;
-
   display: flex;
   justify-content: center;
   align-items: center;
-
   background: rgba(10, 5, 20, 0.95);
-
   opacity: 0;
   pointer-events: none;
 }
@@ -288,7 +285,20 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   position: relative; /* ← absoluteやめる */
   transform: none;    /* ← 消す */
 }
+/* プログレスバー */
+.po-bar-track {
+  width: 260px;
+  height: 2px;
+  background: #2a1d35;
+  overflow: hidden;
+}
 
+.po-bar-fill {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, #7b5fa8, #d3c2ff);
+  transition: width 0.2s linear;
+}
 /* 背景スキャンライン（preloaderと同デザイン） */
 #page-overlay::before {
   content: '';
