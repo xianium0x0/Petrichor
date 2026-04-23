@@ -264,6 +264,8 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 /* 遷移元でJS生成、遷移先では #preloader がそのまま使われる     */
 /* --ready クラスで display:flex に切替、--visible でフェードイン */
 #page-overlay {
+   position: fixed;
+   inset: 0; 
   visibility: hidden;
   opacity: 0;
   pointer-events: none;
