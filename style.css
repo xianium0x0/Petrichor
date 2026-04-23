@@ -308,6 +308,54 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   width: 100%;
 }
 
+/* ── Slim Overlay（トップ以外への遷移時・簡易バーのみ） ─────── */
+#slim-overlay {
+  position: fixed; inset: 0; z-index: 10000;
+  background: rgba(8, 8, 16, 0.92);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s var(--ease-out-expo);
+  pointer-events: none;
+}
+#slim-overlay.slim-overlay--visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+#slim-overlay.slim-overlay--hidden {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s var(--ease-out-expo);
+}
+.slim-bar {
+  width: 0;
+  height: 3px;
+  max-width: clamp(240px, 40vw, 400px);
+  /* slim-barはwidth:100%コンテナの中で伸びる */
+  background: var(--grad-text);
+  box-shadow: 0 0 12px rgba(155,93,229,0.8), 0 0 24px rgba(103,232,249,0.4);
+  transition: width 0.1s linear;
+  position: relative;
+}
+/* バー先端の光 */
+.slim-bar::after {
+  content: '';
+  position: absolute; right: 0; top: 50%;
+  transform: translateY(-50%);
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 8px var(--clr-cyan), 0 0 16px var(--clr-purple-lt);
+}
+/* バー外枠コンテナ */
+#slim-overlay::before {
+  content: '';
+  position: absolute;
+  width: clamp(240px, 40vw, 400px);
+  height: 3px;
+  background: rgba(155,93,229,0.15);
+  border: 1px solid rgba(155,93,229,0.25);
+  box-sizing: content-box;
+}
+
 /* ── オーバーレイ専用コンポーネント（CSSアニメーション不使用） ── */
 /* アニメーションに依存せずJSで直接スタイル制御するため専用クラスで定義 */
 
