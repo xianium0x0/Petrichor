@@ -274,11 +274,11 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   pointer-events: none;
 }
 #page-overlay.page-overlay--ready {
-  display: flex;            /* DOMに追加後まず表示状態にする      */
+  opacity: 0;            /* DOMに追加後まず表示状態にする      */
 }
 #page-overlay.page-overlay--visible {
   opacity: 1;               /* 次フレームでフェードイン           */
-  pointer-events: auto;
+  transition: opacity 0.2s ease;
 }
 /* 背景スキャンライン（preloaderと同デザイン） */
 #page-overlay::before {
