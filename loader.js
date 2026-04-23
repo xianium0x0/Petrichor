@@ -274,6 +274,8 @@ const Loader = (() => {
         overlay.classList.add('page-overlay--ready');
         document.body.appendChild(overlay);
 
+	overlay.getBoundingClientRect(); // ← 強制レイアウト
+
         requestAnimationFrame(() => {
           overlay.classList.add('page-overlay--visible');
         });
@@ -283,7 +285,7 @@ const Loader = (() => {
         const pctEl = overlay.querySelector('#overlay-pct');
         let p = 0;
         const t = setInterval(() => {
-          p = Math.min(p + Math.floor(Math.random() * 15 + 10), 95);
+          p = Math.min(p + Math.floor(Math.random() * 8 + 4), 92);
           if (barEl) barEl.style.width = p + '%';
           if (pctEl) pctEl.textContent = p + '%';
           if (p >= 92) clearInterval(t);
@@ -292,7 +294,7 @@ const Loader = (() => {
         // オーバーレイをしっかり見せてから遷移
         setTimeout(() => {
           window.location.href = href;
-        }, 300);
+        }, 600);
 
       } catch (err) {
         // JS失敗時: 通常遷移（e.preventDefault()前にエラーが出た場合も同様）

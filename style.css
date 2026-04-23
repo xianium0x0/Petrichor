@@ -264,21 +264,17 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 /* 遷移元でJS生成、遷移先では #preloader がそのまま使われる     */
 /* --ready クラスで display:flex に切替、--visible でフェードイン */
 #page-overlay {
-  position: fixed; inset: 0; z-index: 10000;
-  background: var(--clr-black);
-  display: none;            /* JSが --ready を付けるまで非表示   */
-  align-items: center; justify-content: center;
-  overflow: hidden;
+  visibility: hidden;
   opacity: 0;
-  transition: opacity 0.35s var(--ease-out-expo);
   pointer-events: none;
 }
 #page-overlay.page-overlay--ready {
-  opacity: 0;            /* DOMに追加後まず表示状態にする      */
+  visibility: visible;
+  display: flex;
 }
 #page-overlay.page-overlay--visible {
   opacity: 1;               /* 次フレームでフェードイン           */
-  transition: opacity 0.2s ease;
+  pointer-events: auto;
 }
 /* 背景スキャンライン（preloaderと同デザイン） */
 #page-overlay::before {
