@@ -283,7 +283,6 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   pointer-events: all;
 }
 
-}
 /* 背景スキャンライン（preloaderと同デザイン） */
 #page-overlay::before {
   content: '';
