@@ -283,6 +283,14 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   pointer-events: all;
 }
 
+/* 中央を完全固定 */
+.po-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 /* 背景スキャンライン（preloaderと同デザイン） */
 #page-overlay::before {
   content: '';
@@ -373,13 +381,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 .po-bar-area {
   width: clamp(240px, 40vw, 400px);
 }
-/* 中央を完全固定 */
-.po-center {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
+
 .po-bar-header {
   display: flex;
   justify-content: space-between;
