@@ -285,10 +285,8 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 
 /* 中央を完全固定 */
 .po-center {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  position: relative; /* ← absoluteやめる */
+  transform: none;    /* ← 消す */
 }
 
 /* 背景スキャンライン（preloaderと同デザイン） */
