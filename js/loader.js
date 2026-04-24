@@ -238,45 +238,59 @@ const Loader = (() => {
       setTimeout(hidePreloader, 1800);
 
     } else if (mode === 'slim') {
-      // ── 簡易演出: バーのみのオーバーレイを表示してフェードアウト ──
-      // #preloader はすぐ非表示にして、代わりに slim オーバーレイを出す
+      // ── 簡易演出（遷移先）: 即 opacity:1 で表示 → フェードアウト ──
+      // 遷移元ですでにオーバーレイを表示済みのため、
+      // 遷移先でも即座に不透明なオーバーレイを被せてからフェードアウトする。
       const preloader = document.getElementById('preloader');
-      if (preloader) { preloader.remove(); } // HTMLのpreloaderは即除去
+      if (preloader) preloader.remove();
+
+      // body を即座に隠す（遷移直後のちらつき防止）
+      document.body.style.visibility = 'hidden';
 
       const slim = document.createElement('div');
       slim.id = 'slim-overlay';
       slim.setAttribute('aria-hidden', 'true');
-      slim.innerHTML = `<div class="slim-bar" id="slim-bar"></div>`;
+      // 最初から opacity:1 で表示（フェードインしない）
+      slim.style.cssText = 'position:fixed;inset:0;z-index:99999;background:#000007;display:flex;align-items:center;justify-content:center;opacity:1;pointer-events:auto;transition:opacity 0.4s;';
+      const bar = document.createElement('div');
+      bar.style.cssText = 'width:0;height:3px;max-width:400px;background:linear-gradient(135deg,#9b5de5,#67e8f9);box-shadow:0 0 12px rgba(155,93,229,0.8);transition:width 0.1s linear;';
+      slim.appendChild(bar);
       document.body.appendChild(slim);
 
-      // バーをJSで進める
-      const slimBar = slim.querySelector('#slim-bar');
-      let p = 0;
+      // body を再表示（オーバーレイが覆っているので見えない）
+      document.body.style.visibility = '';
+
+      // バーを100%まで進める
+      let p = 60; // 遷移元でも進んでいたので途中から開始
+      bar.style.width = p + '%';
       requestAnimationFrame(() => {
-        slim.classList.add('slim-overlay--visible');
         const t = setInterval(() => {
-          p = Math.min(p + Math.floor(Math.random() * 12 + 8), 99);
-          if (slimBar) slimBar.style.width = p + '%';
+          p = Math.min(p + Math.floor(Math.random() * 10 + 5), 99);
+          bar.style.width = p + '%';
           if (p >= 99) clearInterval(t);
         }, 40);
       });
 
-      // 800ms後にフェードアウトして除去
+      // 600ms後にフェードアウトして除去
       setTimeout(() => {
-        if (slimBar) slimBar.style.width = '100%';
+        bar.style.width = '100%';
         setTimeout(() => {
-          slim.classList.add('slim-overlay--hidden');
-          slim.addEventListener('transitionend', () => slim.remove(), { once: true });
-          setTimeout(() => { if (slim.isConnected) slim.remove(); }, 500);
-          document.body.classList.add('page-loaded');
+          slim.style.opacity = '0';
+          slim.addEventListener('transitionend', () => {
+            slim.remove();
+            document.body.classList.add('page-loaded');
+          }, { once: true });
+          setTimeout(() => {
+            if (slim.isConnected) { slim.remove(); document.body.classList.add('page-loaded'); }
+          }, 600);
         }, 100);
-      }, 800);
+      }, 600);
     }
   };
 
-  // ── 遷移元: クリック → フラグセット → 即遷移 ────────────────
-  // 演出は遷移先の initTransitionLoader が担う（2重表示を防ぐため）。
-  // index.html への遷移は 'full'、それ以外は 'slim' フラグをセット。
+  // ── 遷移元: クリック → オーバーレイ表示 → 遷移 ───────────────
+  // 「演出 → 遷移」の順序を守るため、遷移元でオーバーレイを表示してから遷移する。
+  // 遷移先ではオーバーレイを即 opacity:1 で再生成し、フェードアウトする。
   const initPageTransitions = () => {
     document.addEventListener('click', (e) => {
       try {
@@ -284,7 +298,6 @@ const Loader = (() => {
         if (!link) return;
         const href = link.getAttribute('href');
 
-        // 外部・アンカー・メール・電話・新規タブは除外
         if (
           !href ||
           href.startsWith('#') ||
@@ -297,16 +310,48 @@ const Loader = (() => {
 
         e.preventDefault();
 
-        // 遷移先が index.html かどうかでフラグを切り替える
         const dest = href.replace(/^\.\//, '');
         const mode = (dest === 'index.html' || dest === '') ? 'full' : 'slim';
         sessionStorage.setItem(TRANSITION_KEY, mode);
 
-        // 遷移先で演出するため、遷移元では即遷移
-        window.location.href = href;
+        if (mode === 'full') {
+          // full: #preloader スタイルの全画面オーバーレイを遷移元で表示
+          const overlay = document.createElement('div');
+          overlay.id = 'page-overlay';
+          overlay.setAttribute('aria-hidden', 'true');
+          overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:#000007;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.3s;pointer-events:auto;';
+          overlay.innerHTML = `<p style="font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,6vw,4rem);font-weight:600;letter-spacing:0.15em;background:linear-gradient(135deg,#c084fc,#67e8f9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Petrich<span style="-webkit-text-fill-color:#67e8f9">&#x2205;</span>r</p>`;
+          document.body.appendChild(overlay);
+          requestAnimationFrame(() => { overlay.style.opacity = '1'; });
+          setTimeout(() => { window.location.href = href; }, 400);
+
+        } else {
+          // slim: バーのみの全画面オーバーレイを遷移元で表示
+          const overlay = document.createElement('div');
+          overlay.id = 'slim-pre';
+          overlay.setAttribute('aria-hidden', 'true');
+          overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:#000007;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.2s;pointer-events:auto;';
+          const bar = document.createElement('div');
+          bar.style.cssText = 'width:0;height:3px;max-width:400px;background:linear-gradient(135deg,#9b5de5,#67e8f9);box-shadow:0 0 12px rgba(155,93,229,0.8);transition:width 0.1s linear;';
+          overlay.appendChild(bar);
+          document.body.appendChild(overlay);
+
+          // フェードイン → バー進行 → 遷移
+          requestAnimationFrame(() => {
+            overlay.style.opacity = '1';
+            let p = 0;
+            const t = setInterval(() => {
+              p = Math.min(p + Math.floor(Math.random() * 12 + 8), 95);
+              bar.style.width = p + '%';
+              if (p >= 95) clearInterval(t);
+            }, 40);
+          });
+          setTimeout(() => { window.location.href = href; }, 600);
+        }
 
       } catch (err) {
         console.warn('[Loader] transition error:', err);
+        window.location.href = e.target.closest('a[href]').getAttribute('href');
       }
     });
   };
