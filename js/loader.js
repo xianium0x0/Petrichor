@@ -84,8 +84,8 @@ const Loader = (() => {
     const preloader = document.getElementById('preloader');
     if (!preloader) return;
 
-    // 遷移経由の場合は initTransitionLoader に任せる
-    if (sessionStorage.getItem(TRANSITION_KEY) === '1') return;
+    // 遷移経由の場合は initTransitionLoader に任せる（フラグが存在すれば）
+    if (sessionStorage.getItem(TRANSITION_KEY)) return;
 
     const minTime = 2500; // バーアニメ(1.2s) + ゆっくり表示
     const startTime = Date.now();
@@ -180,70 +180,97 @@ const Loader = (() => {
     return el;
   };
 
-  // 遷移先: #preloader のアニメーションをリセットして再生 → フェードアウト
-  // 問題: CSSアニメーション(preloader-load等)はHTML読み込み直後に始まり
-  //       JSが起動する頃にはほぼ終わっている。
-  // 解決: animation を none にリセット → reflow → 再設定で最初から再生させる。
+  // ── 遷移先ローダー制御 ───────────────────────────────────────
+  // 遷移経由フラグ(TRANSITION_KEY)の値で演出を切り替える。
+  //   'full'  → index.html への遷移: #preloader をフル表示（アニメリセット）
+  //   'slim'  → 他ページへの遷移  : 簡易オーバーレイ（バーのみ）を表示
+  // 通常ロード（直打ち等）はフラグなし → initPreloader が担う。
   const initTransitionLoader = () => {
-    const preloader = document.getElementById('preloader');
-    if (!preloader) return;
-
-    const isTransition = sessionStorage.getItem(TRANSITION_KEY) === '1';
-    if (!isTransition) return;
-
+    const mode = sessionStorage.getItem(TRANSITION_KEY);
+    if (!mode) return; // 遷移経由でなければ何もしない
     sessionStorage.removeItem(TRANSITION_KEY);
 
-    // ── アニメーションをリセットして最初から再生 ──────────────
-    // バー・ロゴ・サブタイトル・プログレスエリアのアニメを全てリセット
-    const bar      = preloader.querySelector('.preloader-bar');
-    const logo     = preloader.querySelector('.preloader-logo');
-    const sub      = preloader.querySelector('.preloader-sub');
-    const wrap     = preloader.querySelector('.preloader-progress-wrap');
-    const pctEl    = preloader.querySelector('.preloader-progress-pct');
+    if (mode === 'full') {
+      // ── フル演出: #preloader をアニメリセットして再生 ──────
+      const preloader = document.getElementById('preloader');
+      if (!preloader) return;
 
-    // animation: none → reflow(offsetHeight読み取り) → 元に戻す
-    [bar, logo, sub, wrap].forEach(el => {
-      if (el) { el.style.animation = 'none'; }
-    });
-    // reflow を強制（これによりアニメーションがリセットされる）
-    preloader.offsetHeight; // eslint-disable-line no-unused-expressions
+      const bar  = preloader.querySelector('.preloader-bar');
+      const logo = preloader.querySelector('.preloader-logo');
+      const sub  = preloader.querySelector('.preloader-sub');
+      const wrap = preloader.querySelector('.preloader-progress-wrap');
+      const pctEl = preloader.querySelector('.preloader-progress-pct');
 
-    [bar, logo, sub, wrap].forEach(el => {
-      if (el) { el.style.animation = ''; }
-    });
+      // animation: none → reflow → 再設定 で最初から再生
+      [bar, logo, sub, wrap].forEach(el => { if (el) el.style.animation = 'none'; });
+      preloader.offsetHeight; // reflow強制
+      [bar, logo, sub, wrap].forEach(el => { if (el) el.style.animation = ''; });
 
-    // パーセント初期化
-    if (pctEl) {
-      pctEl.textContent = '0%';
-      let p = 0;
-      const t = setInterval(() => {
-        p = Math.min(p + Math.floor(Math.random() * 8 + 5), 99);
-        pctEl.textContent = p + '%';
-        if (p >= 99) clearInterval(t);
-      }, 100);
-    }
+      if (pctEl) {
+        pctEl.textContent = '0%';
+        let p = 0;
+        const t = setInterval(() => {
+          p = Math.min(p + Math.floor(Math.random() * 8 + 5), 99);
+          pctEl.textContent = p + '%';
+          if (p >= 99) clearInterval(t);
+        }, 100);
+      }
 
-    // 1800ms後にフェードアウト
-    setTimeout(() => {
-      if (pctEl) pctEl.textContent = '100%';
-      setTimeout(() => {
-        preloader.classList.add('preloader--hidden');
-        preloader.addEventListener('transitionend', () => {
-          preloader.remove();
-          document.body.classList.add('page-loaded');
-        }, { once: true });
-        // フォールバック
+      const hidePreloader = () => {
+        if (pctEl) pctEl.textContent = '100%';
         setTimeout(() => {
-          if (preloader.isConnected) {
+          preloader.classList.add('preloader--hidden');
+          preloader.addEventListener('transitionend', () => {
             preloader.remove();
             document.body.classList.add('page-loaded');
-          }
-        }, 900);
-      }, 150);
-    }, 1800);
+          }, { once: true });
+          setTimeout(() => {
+            if (preloader.isConnected) { preloader.remove(); document.body.classList.add('page-loaded'); }
+          }, 900);
+        }, 150);
+      };
+      setTimeout(hidePreloader, 1800);
+
+    } else if (mode === 'slim') {
+      // ── 簡易演出: バーのみのオーバーレイを表示してフェードアウト ──
+      // #preloader はすぐ非表示にして、代わりに slim オーバーレイを出す
+      const preloader = document.getElementById('preloader');
+      if (preloader) { preloader.remove(); } // HTMLのpreloaderは即除去
+
+      const slim = document.createElement('div');
+      slim.id = 'slim-overlay';
+      slim.setAttribute('aria-hidden', 'true');
+      slim.innerHTML = `<div class="slim-bar" id="slim-bar"></div>`;
+      document.body.appendChild(slim);
+
+      // バーをJSで進める
+      const slimBar = slim.querySelector('#slim-bar');
+      let p = 0;
+      requestAnimationFrame(() => {
+        slim.classList.add('slim-overlay--visible');
+        const t = setInterval(() => {
+          p = Math.min(p + Math.floor(Math.random() * 12 + 8), 99);
+          if (slimBar) slimBar.style.width = p + '%';
+          if (p >= 99) clearInterval(t);
+        }, 40);
+      });
+
+      // 800ms後にフェードアウトして除去
+      setTimeout(() => {
+        if (slimBar) slimBar.style.width = '100%';
+        setTimeout(() => {
+          slim.classList.add('slim-overlay--hidden');
+          slim.addEventListener('transitionend', () => slim.remove(), { once: true });
+          setTimeout(() => { if (slim.isConnected) slim.remove(); }, 500);
+          document.body.classList.add('page-loaded');
+        }, 100);
+      }, 800);
+    }
   };
 
-  // 遷移元: クリック → オーバーレイ表示 → 遷移
+  // ── 遷移元: クリック → フラグセット → 即遷移 ────────────────
+  // 演出は遷移先の initTransitionLoader が担う（2重表示を防ぐため）。
+  // index.html への遷移は 'full'、それ以外は 'slim' フラグをセット。
   const initPageTransitions = () => {
     document.addEventListener('click', (e) => {
       try {
@@ -264,38 +291,15 @@ const Loader = (() => {
 
         e.preventDefault();
 
-        // フラグをセット（遷移先でinitTransitionLoaderが使う）
-        sessionStorage.setItem(TRANSITION_KEY, '1');
+        // 遷移先が index.html かどうかでフラグを切り替える
+        const dest = href.replace(/^\.\//, '');
+        const mode = (dest === 'index.html' || dest === '') ? 'full' : 'slim';
+        sessionStorage.setItem(TRANSITION_KEY, mode);
 
-        // オーバーレイを生成して即表示
-        // display:none → display:flex → 次フレームで visible クラス付与
-        // (CSSアニメーションがDOMへの追加と同時に始まるようにする)
-        const overlay = buildOverlay();
-        overlay.classList.add('page-overlay--ready');
-        document.body.appendChild(overlay);
-
-        requestAnimationFrame(() => {
-          overlay.classList.add('page-overlay--visible');
-        });
-
-        // バーをアニメーション（JSで直接 width を変化させる）
-        const barEl = overlay.querySelector('#overlay-bar');
-        const pctEl = overlay.querySelector('#overlay-pct');
-        let p = 0;
-        const t = setInterval(() => {
-          p = Math.min(p + Math.floor(Math.random() * 8 + 4), 92);
-          if (barEl) barEl.style.width = p + '%';
-          if (pctEl) pctEl.textContent = p + '%';
-          if (p >= 92) clearInterval(t);
-        }, 80);
-
-        // オーバーレイをしっかり見せてから遷移
-        setTimeout(() => {
-          window.location.href = href;
-        }, 1200);
+        // 遷移先で演出するため、遷移元では即遷移
+        window.location.href = href;
 
       } catch (err) {
-        // JS失敗時: 通常遷移（e.preventDefault()前にエラーが出た場合も同様）
         console.warn('[Loader] transition error:', err);
       }
     });
