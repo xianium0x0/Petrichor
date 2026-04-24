@@ -87,6 +87,9 @@ const Loader = (() => {
     // 遷移経由の場合は initTransitionLoader に任せる（フラグが存在すれば）
     if (sessionStorage.getItem(TRANSITION_KEY)) return;
 
+    // display:none のページ（index.html以外）では通常ロードでも表示しない
+    if (preloader.style.display === 'none') return;
+
     const minTime = 2500; // バーアニメ(1.2s) + ゆっくり表示
     const startTime = Date.now();
 
@@ -194,6 +197,9 @@ const Loader = (() => {
       // ── フル演出: #preloader をアニメリセットして再生 ──────
       const preloader = document.getElementById('preloader');
       if (!preloader) return;
+
+      // display:none を解除して表示（index.htmlはdisplay:noneなし、念のため対応）
+      preloader.style.display = 'flex';
 
       const bar  = preloader.querySelector('.preloader-bar');
       const logo = preloader.querySelector('.preloader-logo');
