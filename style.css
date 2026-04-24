@@ -311,7 +311,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 /* ── Slim Overlay（トップ以外への遷移時・簡易バーのみ） ─────── */
 #slim-overlay {
   position: fixed; inset: 0; z-index: 10000;
-  background: rgba(8, 8, 16, 0.92);
+  background: rgba(8, 8, 16, 1);
   display: flex; align-items: center; justify-content: center;
   opacity: 0;
   transition: opacity 0.2s var(--ease-out-expo);
