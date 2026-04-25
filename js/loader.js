@@ -18,28 +18,20 @@ const Loader = (() => {
     <div class="header-logo">
       <a href="index.html" class="logo-link">
         <span class="logo-text">Petrich<span class="logo-symbol">&#x2205;</span>r</span>
-        <span class="logo-tagline">underground idol</span>
       </a>
     </div>
+    <canvas class="header-rain-canvas" id="header-rain-canvas" aria-hidden="true"></canvas>
+    <nav class="site-nav" id="site-nav" aria-label="メインナビゲーション">
+      <ul class="nav-list">
+        <li class="nav-item"><a href="index.html"   class="nav-link">Home</a></li>
+        <li class="nav-item"><a href="member.html"  class="nav-link">Member</a></li>
+        <li class="nav-item"><a href="news.html"    class="nav-link">News</a></li>
+        <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+      </ul>
+    </nav>
   </div>
   <div class="header-line"><div class="header-line-inner"></div></div>
-</header>
-<!-- ハンバーガーボタン: ヘッダーとは独立したfixed要素でスクロール追従 -->
-<button class="nav-toggle" id="nav-toggle" aria-label="メニューを開く" aria-expanded="false">
-  <span class="hamburger-line"></span>
-  <span class="hamburger-line"></span>
-  <span class="hamburger-line"></span>
-</button>
-<nav class="site-nav" id="site-nav" aria-label="メインナビゲーション">
-  <ul class="nav-list">
-    <li class="nav-item"><a href="index.html"   class="nav-link">Home</a></li>
-    <li class="nav-item"><a href="member.html"  class="nav-link">Member</a></li>
-    <li class="nav-item"><a href="news.html"    class="nav-link">News</a></li>
-    <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
-  </ul>
-  <p class="nav-deco">Petrich&#x2205;r &mdash; underground idol</p>
-</nav>
-<div class="nav-overlay" id="nav-overlay"></div>`;
+</header>`;
 
   // ── Footer HTML ────────────────────────────────────────────
   const buildFooter = () => `
@@ -62,7 +54,7 @@ const Loader = (() => {
       </ul>
     </nav>
     <div class="footer-divider"></div>
-    <p class="footer-copy">&copy; 2024 Petrich&#x2205;r. All Rights Reserved.</p>
+    <p class="footer-copy">&copy; 2026 Petrich&#x2205;r. All Rights Reserved.</p>
   </div>
 </footer>`;
 

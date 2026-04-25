@@ -29,11 +29,13 @@ const App = {
     Effect.init();
 
     // 4. ページ固有の Canvas エフェクト
-    if (document.getElementById('hero-canvas')) {
-      Effect.initParticleRain('hero-canvas');
-    }
+    //    member.html のバナー背景雨粒
     if (document.getElementById('banner-canvas')) {
       Effect.initParticleRain('banner-canvas');
+    }
+    //    ヘッダーの雨粒エフェクト（全ページ共通）
+    if (document.getElementById('header-rain-canvas')) {
+      Effect.initParticleRain('header-rain-canvas');
     }
 
     // 5. ページ別データ描画（IDで該当ページを判定）

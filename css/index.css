@@ -16,60 +16,22 @@
   padding: calc(var(--header-h) + 2rem) clamp(1.25rem, 5vw, 3rem) 4rem;
 }
 
-.hero-canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  opacity: 0.7;
-}
-
-/* Orbs
-   z-index:-1 で hero-inner より後ろに配置。
-   filter:blur を持つ要素が fixed 要素を封じ込める問題を防ぐため
-   orbコンテナは isolate しない。 */
-.hero-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(90px);
-  pointer-events: none;
+/* ── ヒーロー背景画像 ──────────────────────────────────────────
+   ★ 差し替え方法: images/hero-bg.jpg を 1920×1080px の画像に変更してください
+   詳細は README.md を参照してください                               */
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(to bottom, rgba(8,8,16,0.55) 0%, rgba(8,8,16,0.3) 50%, rgba(8,8,16,0.7) 100%),
+    url('../images/hero-bg.jpg') center / cover no-repeat;
   z-index: 0;
-  animation: orb-float 8s ease-in-out infinite;
-}
-.hero-orb--1 {
-  width: clamp(300px, 45vw, 600px);
-  height: clamp(300px, 45vw, 600px);
-  background: radial-gradient(circle, rgba(109,40,217,0.25), transparent 70%);
-  top: -10%; left: -10%;
-}
-.hero-orb--2 {
-  width: clamp(200px, 35vw, 450px);
-  height: clamp(200px, 35vw, 450px);
-  background: radial-gradient(circle, rgba(8,145,178,0.2), transparent 70%);
-  bottom: 5%; right: -5%;
-  animation-delay: -3s;
-  animation-duration: 11s;
-}
-.hero-orb--3 {
-  width: clamp(150px, 25vw, 300px);
-  height: clamp(150px, 25vw, 300px);
-  background: radial-gradient(circle, rgba(155,93,229,0.15), transparent 70%);
-  top: 50%; left: 55%;
-  animation-delay: -6s;
-  animation-duration: 14s;
-}
-
-@keyframes orb-float {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(20px, -25px) scale(1.05); }
-  66% { transform: translate(-15px, 15px) scale(0.97); }
 }
 
 /* Inner */
 .hero-inner {
   position: relative;
-  z-index: 1;
+  z-index: 1;  /* hero::before の上 */
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -122,6 +84,17 @@
 .hero-symbol {
   -webkit-text-fill-color: var(--clr-cyan);
   color: var(--clr-cyan);
+}
+
+/* 読み仮名 */
+.hero-reading {
+  font-family: var(--font-mono);
+  font-size: clamp(0.65rem, 1.2vw, 0.8rem);
+  letter-spacing: 0.3em;
+  color: var(--clr-cyan);
+  opacity: 0.75;
+  margin-top: -0.75rem;
+  animation: fade-up 1s 0.45s var(--ease-out-expo) both;
 }
 
 /* Sub */
@@ -328,6 +301,13 @@
   z-index: 1;
 }
 /* ring-spin は style.css で定義 */
+
+/* About タイトル: Cinzelはスモールキャップスのためfont-bodyで上書き */
+.about-title {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-style: normal;
+}
 
 /* ── News ─────────────────────────────────────────────────── */
 .news-list { display: flex; flex-direction: column; gap: 0; }

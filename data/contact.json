@@ -3,16 +3,9 @@
     {
       "platform": "X (Twitter)",
       "handle": "@petrichor_idol",
-      "desc": "ライブ情報・日常更新",
+      "desc": "最新情報・日常更新",
       "url": "#",
       "type": "x"
-    },
-    {
-      "platform": "Instagram",
-      "handle": "@petrichor_idol",
-      "desc": "写真・ビジュアル更新",
-      "url": "#",
-      "type": "ig"
     },
     {
       "platform": "YouTube",
@@ -22,11 +15,18 @@
       "type": "yt"
     },
     {
-      "platform": "TikTok",
-      "handle": "@petrichor_idol",
-      "desc": "ショート動画・ダンス動画",
+      "platform": "Note",
+      "handle": "petrichor_idol",
+      "desc": "活動レポート・コラム",
       "url": "#",
-      "type": "tt"
+      "type": "note"
+    },
+    {
+      "platform": "Gmail",
+      "handle": "petrichor.idol",
+      "desc": "メールでのお問い合わせ",
+      "url": "mailto:petrichor.idol@gmail.com",
+      "type": "gmail"
     }
   ],
   "memberSns": [

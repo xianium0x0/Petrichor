@@ -166,7 +166,6 @@ const Layout = (() => {
   // ── Init All ───────────────────────────────────────────────
   const init = () => {
     initStickyHeader();
-    initMobileNav();
     initScrollProgress();
     initSmoothScroll();
     initBackToTop();
