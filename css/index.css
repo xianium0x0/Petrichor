@@ -30,6 +30,7 @@
 
 @media (max-width: 768px) {
   .hero {
+    height: 100svh;
     background-image: url("../images/hero-bg_mini.jpg");
   }
 }
