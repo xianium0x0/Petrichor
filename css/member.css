@@ -274,6 +274,18 @@
   letter-spacing: 0.2em;
   color: var(--clr-muted);
   text-transform: uppercase;
+  /* 薄い発光 */
+  text-shadow:
+    0 0 8px rgba(155, 93, 229, 0.6),
+    0 0 16px rgba(155, 93, 229, 0.3);
+  transition: text-shadow 0.3s, color 0.3s;
+}
+.member-card:hover .member-card-indicator-text {
+  color: var(--clr-purple-lt);
+  text-shadow:
+    0 0 10px rgba(192, 132, 252, 0.9),
+    0 0 24px rgba(155, 93, 229, 0.6),
+    0 0 40px rgba(155, 93, 229, 0.3);
 }
 
 /* ══════════════════════════════════════════════════════════

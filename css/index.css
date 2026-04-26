@@ -17,21 +17,33 @@
 }
 
 /* ── ヒーロー背景画像 ──────────────────────────────────────────
-   ★ 差し替え方法: images/hero-bg.jpg を 1920×1080px の画像に変更してください
+   ★ PC用   : images/hero-bg.jpg    を差し替えてください（1920×1080px推奨）
+   ★ スマホ用: images/hero-bg-sp.jpg を差し替えてください（768×1334px推奨）
+     スマホ用画像がない場合はPC用が使われます
    詳細は README.md を参照してください                               */
+.hero {
+  /* iOSでスクロール時に背景がカクつく問題を防止 */
+  -webkit-overflow-scrolling: touch;
+}
 .hero::before {
   content: '';
   position: absolute; inset: 0;
   background:
     linear-gradient(to bottom, rgba(8,8,16,0.55) 0%, rgba(8,8,16,0.3) 50%, rgba(8,8,16,0.7) 100%),
     url('../images/hero-bg.jpg') center / cover no-repeat;
+  /* iOS Safariで背景画像がスクロールに追従してカクつくのを防止 */
+  background-attachment: scroll;
+  will-change: auto;
   z-index: 0;
 }
-
+/* スマホ用背景画像（768px以下） */
 @media (max-width: 768px) {
-  .hero {
-    height: 100svh;
-    background-image: url("../images/hero-bg_mini.jpg");
+  .hero::before {
+    background:
+      linear-gradient(to bottom, rgba(8,8,16,0.55) 0%, rgba(8,8,16,0.3) 50%, rgba(8,8,16,0.7) 100%),
+      url('../images/hero-bg-sp.jpg') center / cover no-repeat,
+      url('../images/hero-bg.jpg') center / cover no-repeat;
+    background-attachment: scroll;
   }
 }
 
@@ -109,11 +121,13 @@
   font-family: var(--font-body);
   font-style: italic;
   font-size: clamp(1rem, 1.8vw, 1.2rem);
-  color: var(--clr-muted);
+  color: rgba(210, 200, 240, 0.9);
   line-height: 1.9;
   letter-spacing: 0.04em;
   max-width: 42ch;
   animation: fade-up 1s 0.5s var(--ease-out-expo) both;
+  /* 暗い背景画像の上でも読めるよう影を追加 */
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.8), 0 2px 24px rgba(0, 0, 0, 0.6);
 }
 
 /* CTA */
@@ -124,9 +138,21 @@
   gap: 1rem;
   animation: fade-up 1s 0.65s var(--ease-out-expo) both;
 }
+/* ヒーローボタンに半透明背景を追加して視認性を確保 */
+.hero-btn {
+  background: rgba(10, 6, 24, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-color: rgba(155, 93, 229, 0.5);
+  color: var(--clr-purple-lt);
+}
+.hero-btn:hover { color: #fff; border-color: var(--clr-purple-lt); }
 .btn--ghost {
-  border-color: rgba(103,232,249,0.3);
+  border-color: rgba(103,232,249,0.45);
   color: var(--clr-cyan);
+  background: rgba(8, 20, 30, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 .btn--ghost::before {
   background: linear-gradient(135deg, var(--clr-cyan-dk), rgba(103,232,249,0.6));
@@ -138,23 +164,27 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
-  margin-top: 1rem;
+  gap: 0.6rem;
+  margin-top: 1.5rem;
   animation: fade-up 1s 0.9s var(--ease-out-expo) both;
 }
 .hero-scroll-line {
   display: block;
-  width: 1px;
-  height: 50px;
-  background: linear-gradient(to bottom, var(--clr-purple), transparent);
+  width: 2px;
+  height: 70px;
+  background: linear-gradient(to bottom, var(--clr-cyan), rgba(155,93,229,0.4), transparent);
   animation: scroll-line 1.8s ease-in-out infinite;
+  box-shadow: 0 0 8px rgba(103, 232, 249, 0.6), 0 0 16px rgba(103, 232, 249, 0.3);
+  border-radius: 1px;
 }
 .hero-scroll-text {
   font-family: var(--font-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.25em;
-  color: var(--clr-muted);
+  font-size: 0.7rem;
+  letter-spacing: 0.35em;
+  color: var(--clr-cyan);
   text-transform: uppercase;
+  text-shadow: 0 0 10px rgba(103, 232, 249, 0.7), 0 0 20px rgba(103, 232, 249, 0.4);
+  opacity: 0.9;
 }
 
 @keyframes scroll-line {
@@ -274,6 +304,37 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  /* スマホで崩れないようmin-widthを除去しmax-widthで制御 */
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+/* ★ 任意画像への差し替え:
+     images/about-deco.jpg（または .png）を配置すると同心円の代わりに表示されます。
+     画像がない場合は同心円（リング）が表示されます。
+     index.html の .about-deco に style="--about-deco-img: url('images/about-deco.jpg')" を追加してください。 */
+.about-deco-image {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+.about-deco-image img {
+  width: 100%;
+  height: 100%;
+  max-width: 280px;
+  max-height: 280px;
+  object-fit: contain;
+  border-radius: 50%;
+  opacity: 0.85;
+  /* リングと同じサイズ感 */
+}
+/* 画像がある場合はリングを薄くする */
+.about-deco:has(.about-deco-image img) .about-deco-ring {
+  opacity: 0.35;
 }
 .about-deco-ring {
   position: absolute;
@@ -305,7 +366,7 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 /* ring-spin は style.css で定義 */
 
@@ -380,10 +441,11 @@
     grid-template-columns: 1fr;
     gap: 2rem;
   }
-  .about-deco { height: 240px; }
+  .about-deco { height: 240px; max-width: 240px; }
   .about-deco-ring--1 { width: 180px; height: 180px; }
   .about-deco-ring--2 { width: 130px; height: 130px; }
   .about-deco-ring--3 { width: 85px; height: 85px; }
+  .about-deco-image img { max-width: 180px; max-height: 180px; }
 
   .news-item {
     grid-template-columns: auto 1fr;
