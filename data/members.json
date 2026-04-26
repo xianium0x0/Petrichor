@@ -1,21 +1,21 @@
 [
   {
     "id": 1,
-    "name": "真夜 詩音",
-    "nameEn": "Mayo Shion",
-    "position": "Vocal / Leader",
-    "initial": "詩",
+    "name": "姫宮 めろ",
+    "nameEn": "Hiemiya Mero",
+    "position": "独占ビビッドピンク",
+    "initial": "め",
     "colorClass": "member-photo--1",
     "colorRingClass": "member-color-ring--1",
     "colorHex": "#9b5de5",
-    "colorLabel": "深紫",
-    "birthday": "3月 ●日",
+    "colorLabel": "ビビッドピンク",
+    "birthday": "4月 19日",
     "birthplace": "東京都",
     "height": "158 cm",
     "likes": "雨音、古書、深夜の散歩",
-    "comment": "世界の隙間に落ちた声が、あなたの耳に届くように。",
-    "twitter": "#",
-    "youtube": "#"
+    "comment": "恋は呪い。ずうっと離れないでね。",
+    "twitter": "https://x.com/himemiya_mero",
+    "youtube": "https://t.co/fYZHZqgT07"
   },
   {
     "id": 2,
