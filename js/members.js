@@ -20,11 +20,13 @@ const Members = (() => {
     String(str || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
   // ── 写真エリア HTML ──────────────────────────────────────
-  const buildPhoto = (m) => {
-    if (m.photo) {
-      return `<img src="${esc(m.photo)}" alt="${esc(m.name)}" loading="lazy">`;
+  // src: JSON の photo（表面）または photoBack（裏面）を使用
+  // 未設定の場合はイニシャル表示にフォールバック
+  const buildPhoto = (src, name, initial) => {
+    if (src) {
+      return `<img src="${esc(src)}" alt="${esc(name)}" loading="lazy">`;
     }
-    return `<div class="member-photo-placeholder"><span class="member-initial">${esc(m.initial)}</span></div>`;
+    return `<div class="member-photo-placeholder"><span class="member-initial">${esc(initial)}</span></div>`;
   };
 
   // ── カード 1枚分の HTML ──────────────────────────────────
@@ -33,7 +35,7 @@ const Members = (() => {
       <div class="member-card-inner">
         <div class="member-card-front">
           <div class="member-photo-wrap">
-            <div class="member-photo ${esc(m.colorClass)}">${buildPhoto(m)}</div>
+            <div class="member-photo ${esc(m.colorClass)}">${buildPhoto(m.photo, m.name, m.initial)}</div>
             <div class="member-color-ring ${esc(m.colorRingClass)}"></div>
           </div>
           <div class="member-front-info">
@@ -45,6 +47,7 @@ const Members = (() => {
         </div>
         <div class="member-card-back">
           <div class="member-back-header">
+            ${(m.photoBack || m.photo) ? `<div class="member-back-photo"><img src="${esc(m.photoBack || m.photo)}" alt="${esc(m.name)}" loading="lazy"></div>` : ''}
             <p class="member-back-position">${esc(m.position)}</p>
             <h2 class="member-back-name">${esc(m.name)}</h2>
           </div>

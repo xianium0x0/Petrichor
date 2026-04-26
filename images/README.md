@@ -2,26 +2,31 @@
 
 このフォルダにサイトで使用する画像を格納します。
 
-## 推奨ファイル名
-
-| ファイル名 | 用途 |
-|---|---|
-| `og-image.jpg` | OGP画像 (1200×630px) |
-| `favicon.ico` | ファビコン |
-| `member-mayo.jpg` | 真夜 詩音 プロフィール写真 |
-| `member-nagi.jpg` | 蒼井 凪 プロフィール写真 |
-| `member-rei.jpg` | 黒羽 れい プロフィール写真 |
-| `member-tsuki.jpg` | 星宮 つき プロフィール写真 |
-| `member-mio.jpg` | 緋色 みお プロフィール写真 |
-
 ## メンバー写真の差し替え方法
 
-`member.html` の各 `.member-photo` 要素内に `<img>` タグを追加してください。
+写真は `data/members.json` の各メンバーの `photo`（表面）・`photoBack`（裏面）フィールドに
+`images/` フォルダ内のファイルパスを指定してください。
 
-```html
-<div class="member-photo member-photo--1">
-  <img src="images/member-mayo.jpg" alt="真夜 詩音">
-</div>
+```json
+{
+  "name": "真夜 詩音",
+  "photo":     "images/mayo-front.jpg",
+  "photoBack": "images/mayo-back.jpg",
+  ...
+}
 ```
 
-`.member-photo-placeholder` の `<div>` は削除してください。
+- `photo` — カード表面に表示される写真
+- `photoBack` — カード裏面（プロフィール画面）に表示される写真
+- どちらも `null` のままにするとイニシャルが表示されます
+- `photoBack` が `null` の場合、表面の `photo` が裏面にも使用されます
+
+## 推奨ファイル名・サイズ
+
+| 用途 | 例 | 推奨サイズ |
+|---|---|---|
+| メンバー表面写真 | `mayo-front.jpg` | 400×400px、正方形推奨 |
+| メンバー裏面写真 | `mayo-back.jpg` | 400×400px、正方形推奨 |
+| ヒーロー背景 | `hero-bg.jpg` | 1920×1080px |
+| OGP画像 | `og-image.jpg` | 1200×630px |
+| ファビコン | `favicon.ico` | 32×32px |

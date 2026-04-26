@@ -33,37 +33,28 @@ const Loader = (() => {
   <div class="header-line"><div class="header-line-inner"></div></div>
 </header>`;
 
-  // ── Footer HTML ────────────────────────────────────────────
-  const buildFooter = () => `
-<footer class="site-footer">
-  <div class="footer-bg-decor">
-    <div class="footer-circle footer-circle--1"></div>
-    <div class="footer-circle footer-circle--2"></div>
-  </div>
-  <div class="footer-inner">
-    <div class="footer-logo-area">
-      <p class="footer-logo-text">Petrich<span class="logo-symbol">&#x2205;</span>r</p>
-      <p class="footer-tagline">— where rain meets asphalt —</p>
-    </div>
-    <nav class="footer-nav" aria-label="フッターナビゲーション">
-      <ul class="footer-nav-list">
-        <li><a href="index.html"   class="footer-nav-link">Home</a></li>
-        <li><a href="member.html"  class="footer-nav-link">Member</a></li>
-        <li><a href="news.html"    class="footer-nav-link">News</a></li>
-        <li><a href="contact.html" class="footer-nav-link">Contact</a></li>
-      </ul>
-    </nav>
-    <div class="footer-divider"></div>
-    <p class="footer-copy">&copy; 2026 Petrich&#x2205;r. All Rights Reserved.</p>
-  </div>
-</footer>`;
+  // ── Footer: partials/footer.html を fetch で読み込む ──────
+  // ★ フッターの編集は partials/footer.html を変更してください
+  const loadFooter = async () => {
+    const footerEl = document.getElementById('footer-placeholder');
+    if (!footerEl) return;
+    try {
+      const res = await fetch('partials/footer.html');
+      if (!res.ok) throw new Error('footer fetch failed');
+      const html = await res.text();
+      footerEl.outerHTML = html;
+    } catch (e) {
+      // fetchが失敗した場合（file://プロトコル等）はフォールバック
+      footerEl.outerHTML = `<footer class="site-footer"><div class="footer-inner"><p class="footer-copy">&copy; 2026 Petrich&#x2205;r. All Rights Reserved.</p></div></footer>`;
+    }
+  };
 
   // ── Inject Partials into DOM ───────────────────────────────
-  const injectPartials = () => {
+  // ヘッダーは同期でDOM生成、フッターはfetchで読み込む
+  const injectPartials = async () => {
     const headerEl = document.getElementById('header-placeholder');
-    const footerEl = document.getElementById('footer-placeholder');
     if (headerEl) headerEl.outerHTML = buildHeader();
-    if (footerEl) footerEl.outerHTML = buildFooter();
+    await loadFooter();
   };
 
   // ── Preloader ──────────────────────────────────────────────
@@ -153,8 +144,8 @@ const Loader = (() => {
   };
 
   // ── Init ───────────────────────────────────────────────────
-  const init = () => {
-    injectPartials();        // まず header/footer を DOM に挿入
+  const init = async () => {
+    await injectPartials();  // まず header/footer を DOM に挿入
     initPreloader();         // トップページの全画面プリローダー（通常ロード）
     initPageTransitions();   // リンククリック → 遷移
     setActiveNavLink();      // 現在ページのナビリンクをアクティブに
