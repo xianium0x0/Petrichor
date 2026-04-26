@@ -54,7 +54,7 @@ const Loader = (() => {
   <div class="footer-inner">
     <div class="footer-logo-area">
       <p class="footer-logo-text">Petrich<span class="logo-symbol">&#x2205;</span>r</p>
-      <p class="footer-tagline">— where rain meets asphalt —</p>
+      <p class="footer-tagline">— Dependence. Conflict. The Need for Recognition. —</p>
     </div>
     <nav class="footer-nav" aria-label="フッターナビゲーション">
       <ul class="footer-nav-list">
