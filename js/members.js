@@ -27,8 +27,10 @@ const Members = (() => {
   // photo は表面の背景シルエット画像（CSS背景として使用）
   // photoBack は裏面の画像
   const buildCard = (m, index) => {
-    const frontBg = m.photo
-      ? `style="--member-bg: url('${esc(m.photo)}');"`
+    // photo は .member-card-silhouette の style に直接 background-image として設定
+    // CSS変数経由だと一部ブラウザで継承が機能しないため直接指定に変更
+    const silhouetteBg = m.photo
+      ? `style="background-image: url('${esc(m.photo)}');"`
       : '';
     const backImg = (m.photoBack || m.photo)
       ? `<img src="${esc(m.photoBack || m.photo)}" alt="${esc(m.name)}" class="member-back-img" loading="lazy">`
@@ -44,10 +46,10 @@ const Members = (() => {
       <div class="member-card-inner">
 
         <!-- ── 表面 ── -->
-        <div class="member-card-front" ${frontBg}>
+        <div class="member-card-front">
 
           <!-- シルエット背景（photo指定時） -->
-          <div class="member-card-silhouette" aria-hidden="true"></div>
+          <div class="member-card-silhouette" aria-hidden="true" ${silhouetteBg}></div>
 
           <!-- 下部グラデーションライン -->
           <div class="member-card-line" aria-hidden="true"></div>
