@@ -6,7 +6,7 @@
     "position": "Vocal / Leader",
     "initial": "詩",
     "photo": "images/mero-front.jpg",
-    "photoBack": "images/mero-back.jpg",
+    "photoBack": "images/mero-front.png",
     "colorClass": "member-photo--1",
     "colorRingClass": "member-color-ring--1",
     "colorHex": "#9b5de5",
