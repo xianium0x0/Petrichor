@@ -5,7 +5,7 @@
     "nameEn": "Mayo Shion",
     "position": "Vocal / Leader",
     "initial": "詩",
-    "photo": images/mero-front.jpg,
+    "photo": "images/mero-front.jpg",
     "photoBack": null,
     "colorClass": "member-photo--1",
     "colorRingClass": "member-color-ring--1",
