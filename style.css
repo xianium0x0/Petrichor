@@ -269,20 +269,51 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   transition: width 0.1s linear;
 }
 
-/* ── Custom Cursor (SVG inline方式) ────────────────────────── */
-/* position:fixed封じ込め問題を回避するためSVG cursor URLで実装 */
-/* タッチデバイス(スマホ)ではデフォルトカーソルを維持            */
-
-/* 通常カーソル: 紫の菱形＋細い十字 */
+/* ── Custom Cursor（DOM要素・ディレイ追随方式） ────────────── */
+/* タッチデバイスではデフォルトカーソルを維持                    */
 @media (hover: hover) and (pointer: fine) {
-  * {
-    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='6' fill='%23c084fc' fill-opacity='0.95'/%3E%3Ccircle cx='16' cy='16' r='11' fill='none' stroke='%239b5de5' stroke-width='1.5' stroke-opacity='0.7'/%3E%3Cline x1='16' y1='2' x2='16' y2='8' stroke='%2367e8f9' stroke-width='1' stroke-opacity='0.6'/%3E%3Cline x1='16' y1='24' x2='16' y2='30' stroke='%2367e8f9' stroke-width='1' stroke-opacity='0.6'/%3E%3Cline x1='2' y1='16' x2='8' y2='16' stroke='%2367e8f9' stroke-width='1' stroke-opacity='0.6'/%3E%3Cline x1='24' y1='16' x2='30' y2='16' stroke='%2367e8f9' stroke-width='1' stroke-opacity='0.6'/%3E%3C/svg%3E") 16 16, crosshair !important;
-  }
+  * { cursor: none !important; }
+}
 
-  /* ホバー時: シアンの拡大リング */
-  a, button, [data-cursor-expand] {
-    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 44 44'%3E%3Ccircle cx='22' cy='22' r='7' fill='%2367e8f9' fill-opacity='0.9'/%3E%3Ccircle cx='22' cy='22' r='18' fill='none' stroke='%2367e8f9' stroke-width='1.5' stroke-opacity='0.6' stroke-dasharray='4 3'/%3E%3C/svg%3E") 22 22, pointer !important;
-  }
+/* ドット（小・即時追随） */
+.cursor-dot {
+  position: fixed; top: 0; left: 0; z-index: 100001;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--clr-purple-lt);
+  pointer-events: none;
+  margin-left: -4px; margin-top: -4px;
+  opacity: 0;
+  transition: opacity 0.3s, background 0.25s, width 0.2s, height 0.2s, margin 0.2s;
+  box-shadow: 0 0 6px rgba(192, 132, 252, 0.8);
+}
+.cursor-dot--hover {
+  width: 5px; height: 5px;
+  margin-left: -2.5px; margin-top: -2.5px;
+  background: var(--clr-cyan);
+  box-shadow: 0 0 8px rgba(103, 232, 249, 0.9);
+}
+
+/* リング（大・遅延追随） */
+.cursor-ring {
+  position: fixed; top: 0; left: 0; z-index: 100000;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(155, 93, 229, 0.65);
+  pointer-events: none;
+  margin-left: -18px; margin-top: -18px;
+  opacity: 0;
+  transition: opacity 0.3s,
+              width 0.35s var(--ease-out-expo),
+              height 0.35s var(--ease-out-expo),
+              margin 0.35s var(--ease-out-expo),
+              border-color 0.3s;
+}
+.cursor-ring--hover {
+  width: 52px; height: 52px;
+  margin-left: -26px; margin-top: -26px;
+  border-color: rgba(103, 232, 249, 0.8);
+  box-shadow: 0 0 12px rgba(103, 232, 249, 0.25);
 }
 
 /* ── Header ───────────────────────────────────────────────── */

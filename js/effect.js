@@ -111,11 +111,72 @@ const Effect = (() => {
     };
   };
 
-  // ── Custom Cursor ─────────────────────────────────────────
-  // SVG cursor URL方式に変更したためJSによるDOM生成は不要。
-  // カーソルデザインは style.css の @media (hover:hover) で定義。
+  // ── Custom Cursor（DOM要素によるディレイ追随方式） ───────────
+  // ドット（即時追随）＋リング（イージング遅延追随）の2層構造。
+  // body の transform が除去済みのため position:fixed が正しく機能する。
+  // タッチデバイスでは無効。
   const initCursorGlow = () => {
-    // no-op: CSS SVG cursorで実装済み
+    if (window.matchMedia('(hover: none)').matches) return;
+
+    // ドット（小・即時）
+    const dot = document.createElement('div');
+    dot.className = 'cursor-dot';
+    // リング（大・遅延）
+    const ring = document.createElement('div');
+    ring.className = 'cursor-ring';
+
+    document.body.appendChild(ring);
+    document.body.appendChild(dot);
+
+    let mx = -300, my = -300; // マウス実座標
+    let rx = -300, ry = -300; // リング追随座標
+    let visible = false;
+
+    document.addEventListener('mousemove', (e) => {
+      mx = e.clientX;
+      my = e.clientY;
+      // ドットは即時追随
+      dot.style.transform = `translate(${mx}px, ${my}px)`;
+      if (!visible) {
+        visible = true;
+        dot.style.opacity = '1';
+        ring.style.opacity = '1';
+        rx = mx; ry = my;
+      }
+    });
+
+    document.addEventListener('mouseleave', () => {
+      visible = false;
+      dot.style.opacity = '0';
+      ring.style.opacity = '0';
+    });
+
+    // リングはイージングでなめらかに追随（ディレイ演出）
+    const animate = () => {
+      rx += (mx - rx) * 0.10;
+      ry += (my - ry) * 0.10;
+      ring.style.transform = `translate(${rx}px, ${ry}px)`;
+      requestAnimationFrame(animate);
+    };
+    animate();
+
+    // ホバー時にリング拡大・色変化
+    const onEnter = () => {
+      ring.classList.add('cursor-ring--hover');
+      dot.classList.add('cursor-dot--hover');
+    };
+    const onLeave = () => {
+      ring.classList.remove('cursor-ring--hover');
+      dot.classList.remove('cursor-dot--hover');
+    };
+
+    // 動的に追加される要素にも対応するためdelegationで処理
+    document.addEventListener('mouseover', (e) => {
+      if (e.target.closest('a, button, [data-cursor-expand]')) onEnter();
+    });
+    document.addEventListener('mouseout', (e) => {
+      if (e.target.closest('a, button, [data-cursor-expand]')) onLeave();
+    });
   };
 
   // ── Parallax ───────────────────────────────────────────────

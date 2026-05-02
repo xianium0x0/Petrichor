@@ -153,9 +153,11 @@ const Members = (() => {
     // 閉じるボタン
     modal.querySelector('.modal-close').addEventListener('click', closeModal);
 
-    // オーバーレイ背景クリックで閉じる
+    // モーダル全体（オーバーレイ・パネル問わず）のクリックで閉じる
+    // リンク・ボタンのクリックは除外する
     modal.addEventListener('click', (e) => {
-      if (e.target === modal) closeModal();
+      if (e.target.closest('a, button')) return;
+      closeModal();
     });
 
     // フォーカス管理
